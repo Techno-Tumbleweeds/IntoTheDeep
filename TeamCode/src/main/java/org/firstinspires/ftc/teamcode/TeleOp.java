@@ -118,7 +118,7 @@ public class TeleOp extends OpMode {
 
 
 
-            armPos = 0.99;
+            armPos = 0;
         }
 
 
@@ -149,7 +149,7 @@ public class TeleOp extends OpMode {
             //ArmMotor.setPower(0.25);
 
 
-            armPos = 0;
+            armPos = 0.15;
         }
 
 
@@ -202,12 +202,7 @@ public class TeleOp extends OpMode {
 
 
 
-        ArmJoint.setPosition(armPos + (0 - gamepad2.left_stick_y)
-
-
-
-
-        );
+        ArmJoint.setPosition(armPos + (0 - gamepad2.left_stick_y));
 
 
 
@@ -218,8 +213,6 @@ public class TeleOp extends OpMode {
         else{
             claw.setPosition(0.5);
         }
-
-
 
 
         // Example telemetry for servo position
