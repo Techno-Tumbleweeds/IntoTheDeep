@@ -75,6 +75,8 @@ public class TeleOp extends OpMode {
 
 
         ArmMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+        ArmMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
 
 
