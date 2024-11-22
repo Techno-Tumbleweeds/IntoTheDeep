@@ -78,9 +78,6 @@ public class TeleOp extends OpMode {
         ArmMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
-
-
-
         //Slows drop of lift kit
         ArmMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ArmMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
