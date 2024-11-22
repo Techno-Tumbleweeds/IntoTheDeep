@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 
-@TeleOp(name = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends OpMode {
 
 
@@ -20,7 +19,8 @@ public class TeleOp extends OpMode {
     DcMotor FrontRight;
     DcMotor BackLeft;
     DcMotor BackRight;
-    DcMotor ArmMotor;
+    DcMotor ArmMotorR;
+    DcMotor ArmMotorL;
     Servo ArmJoint;
     Servo claw;
 
@@ -41,7 +41,7 @@ public class TeleOp extends OpMode {
 
 
 
-    boolean isMoving = false;
+    //boolean isMoving = false;
     //double armPosfreeze = 0.35;
 
 
@@ -53,7 +53,9 @@ public class TeleOp extends OpMode {
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeft = hardwareMap.get(DcMotor.class,"BackLeft");
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
-        ArmMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
+        ArmMotorR = hardwareMap.get(DcMotor.class, "ArmMotorR");
+        ArmMotorL = hardwareMap.get(DcMotor.class, "ArmMotorL");
+
 
 
 
@@ -72,24 +74,18 @@ public class TeleOp extends OpMode {
 
 
 
-        ArmMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        ArmMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 
 
         //Slows drop of lift kit
-        ArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
-
-
-        ArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-
-
-
-
+        ArmMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ArmMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         telemetry.addData("Initialization:", "Initialized");
@@ -130,7 +126,7 @@ public class TeleOp extends OpMode {
 
 
         //top rung
-        if (gamepad2.dpad_left) {
+        /*if (gamepad2.dpad_left) {
             //sets position for arm height an moves it there
             //ArmMotor.setTargetPosition(1200);
             //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -140,6 +136,8 @@ public class TeleOp extends OpMode {
 
 
         }
+
+         */
 
 
 
@@ -173,13 +171,7 @@ public class TeleOp extends OpMode {
       } else if (!gamepad2.left_bumper) {
           armPos = armPosfreeze;
       }
-
-
-
-
        */
-
-
 
 
         if(gamepad1.triangle){
@@ -191,17 +183,20 @@ public class TeleOp extends OpMode {
         }
 
 
-
-
         //manual control
-        if (!ArmMotor.isBusy()) {
+        if (!ArmMotorR.isBusy()) {
             //Stop both motors when target position is reached
-            ArmMotor.setPower(-gamepad2.right_stick_y);
+            ArmMotorR.setPower(-gamepad2.right_stick_y);
             // Set motors back to RUN_USING_ENCODER mode for other operations
-            ArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            ArmMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-
+        if (!ArmMotorL.isBusy()) {
+            //Stop both motors when target position is reached
+            ArmMotorL.setPower(-gamepad2.right_stick_y);
+            // Set motors back to RUN_USING_ENCODER mode for other operations
+            ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
 
 
