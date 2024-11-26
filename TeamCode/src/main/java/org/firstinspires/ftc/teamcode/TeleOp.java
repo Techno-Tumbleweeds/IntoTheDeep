@@ -5,17 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends OpMode {
+    //Declares names of components
     DcMotor FrontLeft;
     DcMotor FrontRight;
     DcMotor BackLeft;
     DcMotor BackRight;
     DcMotor ArmMotorR;
     DcMotor ArmMotorL;
+    DcMotor ArmJoint;
     Servo claw;
+    Servo clawmove;
 
     //Sets variables
     double armPos = 0;
@@ -38,15 +41,18 @@ public class TeleOp extends OpMode {
 
     @Override
     public void init() {
+        //finds components in robot configuration (Motors)
         FrontLeft = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeft = hardwareMap.get(DcMotor.class,"BackLeft");
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
         ArmMotorR = hardwareMap.get(DcMotor.class, "ArmMotorR");
         ArmMotorL = hardwareMap.get(DcMotor.class, "ArmMotorL");
+        ArmJoint = hardwareMap.get(DcMotor.class, "ArmJoint");
 
         //finds components in robot configuration (Servos)
         claw = hardwareMap.get(Servo.class, "claw");
+        clawmove = hardwareMap.get(Servo.class, "clawmove");
 
         //sets directions of movement motors
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -77,6 +83,7 @@ public class TeleOp extends OpMode {
     }
 
     @Override
+    //main loop
     public void loop() {
 
         long currentTime = System.currentTimeMillis();
@@ -247,12 +254,12 @@ public class TeleOp extends OpMode {
 
 
 /*
-       if (!ArmMotorL.isBusy()) {
-           //Stop both motors when target position is reached
-           ArmMotorL.setPower(gamepad2.right_stick_y);
-           // Set motors back to RUN_USING_ENCODER mode for other operations
-           ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-       }
+        if (!ArmMotorL.isBusy()) {
+            //Stop both motors when target position is reached
+            ArmMotorL.setPower(gamepad2.right_stick_y);
+            // Set motors back to RUN_USING_ENCODER mode for other operations
+            ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
 */
         ElapsedTime buttonTimer = new ElapsedTime(); // Timer for button control
@@ -290,11 +297,8 @@ public class TeleOp extends OpMode {
 
 
 
-
-
-
-
         // Example telemetry for servo position
+        //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
         telemetry.update();
     }
 }
