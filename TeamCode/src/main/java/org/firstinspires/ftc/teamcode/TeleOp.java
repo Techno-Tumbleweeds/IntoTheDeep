@@ -86,12 +86,12 @@ public class TeleOp extends OpMode {
             motorSpeed = 0.275;
         }
 
-        //if (gamepad2.left_stick_y != 0) {
-        //    armPos = ArmJoint.getCurrentPosition();
-        //}
+        if (gamepad2.left_stick_y != 0) {
+            armPos = ArmJoint.getCurrentPosition();
+        }
         //ArmJoint.setPower(armPower * (double) ((gamepad2.dpad_up ? 1.0 : 0.0) - (gamepad2.dpad_down ? 1.0 : 0.0)));
-        //ArmJoint.setPower(gamepad2.left_stick_y + 80 * (ArmJoint.getCurrentPosition() - armPos));
-        ArmJoint.setPower(gamepad2.left_stick_y);
+        ArmJoint.setPower(gamepad2.left_stick_y + 0.02 * (armPos - ArmJoint.getCurrentPosition()));
+        //ArmJoint.setPower(gamepad2.left_stick_y);
 
         /*
         //detects button press to set servo mode to free

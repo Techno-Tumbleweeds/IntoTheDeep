@@ -50,6 +50,7 @@ public class HunterAuto extends LinearOpMode {
         ArmMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
+        waitForStart();
 
         BackLeft.setPower(0.5);
         BackRight.setPower(0.5);
