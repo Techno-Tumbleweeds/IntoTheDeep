@@ -16,14 +16,15 @@ public class TeleOp extends OpMode {
     DcMotor BackRight;
     DcMotor ArmMotorR;
     DcMotor ArmMotorL;
-    Servo ArmJoint;
+    DcMotor ArmJoint;
     Servo claw;
 
     //Sets variables
-    double armPos =0;
-    double armPosfreeze;
-    boolean armFree = false;
+    double armPos;
+   //double armPosfreeze;
+    //boolean armFree = false;
     double motorSpeed = 0.8;
+    double armPower = 1;
     //boolean isMoving = false;
     //double armPosfreeze = 0.35;
 
@@ -37,10 +38,11 @@ public class TeleOp extends OpMode {
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
         ArmMotorR = hardwareMap.get(DcMotor.class, "ArmMotorR");
         ArmMotorL = hardwareMap.get(DcMotor.class, "ArmMotorL");
+        ArmJoint = hardwareMap.get(DcMotor.class, "ArmJoint");
 
         //finds components in robot configuration (Servos)
         claw = hardwareMap.get(Servo.class, "claw");
-        ArmJoint = hardwareMap.get(Servo.class, "ArmJoint");
+        //ArmJoint = hardwareMap.get(Servo.class, "ArmJoint");
 
         //sets directions of movement motors
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -50,7 +52,7 @@ public class TeleOp extends OpMode {
 
         //sets directions of arm motors
         ArmMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
-        ArmMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
+        ArmMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //slows drop of lift kit
         ArmMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,6 +61,7 @@ public class TeleOp extends OpMode {
         //resets encoders in each motor in the lift kit
         ArmMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //ArmJoint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         //prints on the drivers hub "Initialization: Initialized"
         telemetry.addData("Initialization:", "Initialized");
@@ -83,6 +86,14 @@ public class TeleOp extends OpMode {
             motorSpeed = 0.275;
         }
 
+        //if (gamepad2.left_stick_y != 0) {
+        //    armPos = ArmJoint.getCurrentPosition();
+        //}
+        //ArmJoint.setPower(armPower * (double) ((gamepad2.dpad_up ? 1.0 : 0.0) - (gamepad2.dpad_down ? 1.0 : 0.0)));
+        //ArmJoint.setPower(gamepad2.left_stick_y + 80 * (ArmJoint.getCurrentPosition() - armPos));
+        ArmJoint.setPower(gamepad2.left_stick_y);
+
+        /*
         //detects button press to set servo mode to free
         if (gamepad2.dpad_left){
             armFree = !armFree;
@@ -113,6 +124,7 @@ public class TeleOp extends OpMode {
 
         //moves servo
         ArmJoint.setPosition(armPos);
+        */
 
         //closes or opens claw
         if (gamepad2.right_bumper) {
@@ -140,8 +152,8 @@ public class TeleOp extends OpMode {
         }
 
         // Example telemetry for servo position
-        telemetry.addData("Servo Position", ArmJoint.getPosition());
-        telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
+        //telemetry.addData("Servo Position", ArmJoint.getPosition());
+        //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
         telemetry.update();
     }
 }
