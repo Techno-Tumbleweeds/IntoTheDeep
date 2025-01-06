@@ -66,17 +66,19 @@ public class AutoTogether extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  -52,  -52, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -52,  -52, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   8, -8, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  48,  48, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(TURN_SPEED,   8, -8, 25, 225);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  50,  50, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -51,  -51, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -9,  9, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  37,  -37, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  12,  12, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -37,  37, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  47,  47, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -52,  -52, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(DRIVE_SPEED,  -9,  9, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  28,  -28, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  15,  15, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -37,  37, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  50,  50, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -50,  -50, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
