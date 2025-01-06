@@ -37,11 +37,17 @@ public class AutoTogether extends LinearOpMode {
         FrontLeft  = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
 
+
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
+
+        FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -60,9 +66,17 @@ public class AutoTogether extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        //encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   -40, 40, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -52,  -52, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   8, -8, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  48,  48, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -51,  -51, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -9,  9, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  37,  -37, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  12,  12, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -37,  37, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  47,  47, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -79,9 +93,10 @@ public class AutoTogether extends LinearOpMode {
      */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
-                             double timeoutS) {
+                             double timeoutS, long waitTime) {
         int newLeftTarget;
         int newRightTarget;
+
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
@@ -116,6 +131,7 @@ public class AutoTogether extends LinearOpMode {
                 telemetry.addData("Currently at",  " at %7d :%7d",
                         FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition());
                 telemetry.update();
+
             }
 
             // Stop all motion;
@@ -126,7 +142,7 @@ public class AutoTogether extends LinearOpMode {
             FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);   // optional pause after each move.
+            sleep(waitTime);   // optional pause after each move.
         }
     }
 }
