@@ -77,8 +77,10 @@ public class AutoHuskeyLens extends LinearOpMode {
             HuskyLens.Block[] blocks = Cam.blocks();
             telemetry.addData("Block count", blocks.length);
 
+            /*
             for (HuskyLens.Block block : blocks) {
                 telemetry.addData("Block", block.toString());
+
 
                 // Example: Move forward if object with ID 1 is detected
                 if (block.id == 1) {
@@ -88,14 +90,15 @@ public class AutoHuskeyLens extends LinearOpMode {
                 }
             }
 
+             */
+
 
             telemetry.update();
         }
 
         public void encoderDrive(double speed,
-        double leftInches, double rightInches,
-        double timeoutS, long waitTime) {
-
+                double leftInches, double rightInches,
+                double timeoutS, long waitTime) {
             int newLeftTarget;
             int newRightTarget;
 
@@ -148,13 +151,15 @@ public class AutoHuskeyLens extends LinearOpMode {
             }
     }
 
-        private void moveForward(double power) {
-            FrontLeft.setPower(power);
-            FrontRight.setPower(power);
-        }
+}
 
         private void stopMotors() {
             FrontLeft.setPower(0);
             FrontRight.setPower(0);
         }
-}
+
+        private void moveForward(double power) {
+            FrontLeft.setPower(power);
+            FrontRight.setPower(power);
+        }
+    }
