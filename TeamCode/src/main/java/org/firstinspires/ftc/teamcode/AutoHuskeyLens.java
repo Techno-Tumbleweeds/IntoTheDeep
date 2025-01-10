@@ -113,7 +113,8 @@ public class AutoHuskeyLens extends LinearOpMode {
         telemetry.update();
 
         Cam = hardwareMap.get(HuskyLens.class, "Cam");
-
+        long time = System.currentTimeMillis();
+        int searchDirection = 1;
 
         Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
@@ -128,10 +129,11 @@ public class AutoHuskeyLens extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED,  -65,  -65, 10, 600, 0.85);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -80,  -80, 10, 500, 0.85);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   8, -8, 25, 325, 0.45);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   4, 15, 25, 750, 0.45);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   10, -10, 25, 325, 0.5);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   16, 16, 25, 325, 0.2);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   4, 22, 25, 750, 0.45);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
         while (opModeIsActive()) {
             if (!rateLimit.hasExpired()) {
@@ -149,9 +151,50 @@ public class AutoHuskeyLens extends LinearOpMode {
 
                 // Example: Move forward if object with ID 1 is detected
                 if (block.id == 1) {
+                    if (block.height < 75){
+
+                        FrontLeft.setPower(0.1);
+                        FrontRight.setPower(0.1);
+
+                        while (block.height < 75) {
+                            // You can also add a small delay to avoid running the loop too fast
+                            try {
+                                Thread.sleep(100); // Pause for 100 ms
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        // Once the block height is 75 or more, stop the motors
+                        FrontLeft.setPower(0);
+                        FrontRight.setPower(0);
+                    } else if (block.height > 79) {
+
+                        FrontLeft.setPower(-0.1);
+                        FrontRight.setPower(-0.1);
+
+                        try {
+                            Thread.sleep(100); // Pause for 100 ms
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }else {
+                        FrontLeft.setPower(0);
+                        FrontRight.setPower(0);
+
+                    }
+
                     moveForward(0.5); // Move forward at 50% power
                 } else {
-                    stopMotors();
+                    telemetry.addData("JIGGLE",searchDirection);
+                    telemetry.update();
+                    FrontLeft.setPower(0.1 * searchDirection);
+                    FrontRight.setPower(0.1 * searchDirection);
+                    if (System.currentTimeMillis() - time > 2500) {
+                        time = System.currentTimeMillis();
+                        searchDirection *= -1;
+                    }
+                    System.currentTimeMillis();
                 }
             }
 
