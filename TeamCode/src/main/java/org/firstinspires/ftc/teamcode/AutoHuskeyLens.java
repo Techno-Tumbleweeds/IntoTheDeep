@@ -16,8 +16,8 @@ public class AutoHuskeyLens extends LinearOpMode {
     private HuskyLens Cam;
 
     // Declare motors
-    private DcMotor FrontLeft;
-    private DcMotor FrontRight;
+    private DcMotor         FrontLeft   = null;
+    private DcMotor         FrontRight  = null;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -31,7 +31,8 @@ public class AutoHuskeyLens extends LinearOpMode {
 
     public void encoderDrive(double speed,
                                 double leftInches, double rightInches,
-                                double timeoutS, long waitTime) {
+                                double timeoutS, long waitTime,
+                                double motorSpeed) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -51,8 +52,8 @@ public class AutoHuskeyLens extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
-            FrontLeft.setPower(Math.abs(speed));
-            FrontRight.setPower(Math.abs(speed));
+            FrontLeft.setPower(Math.abs(speed) * motorSpeed);
+            FrontRight.setPower(Math.abs(speed) * motorSpeed);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -72,6 +73,7 @@ public class AutoHuskeyLens extends LinearOpMode {
 
             }
 
+            sleep(waitTime);   // optional pause after each move.
 
         }
     }
@@ -89,12 +91,14 @@ public class AutoHuskeyLens extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        FrontLeft = hardwareMap.get(DcMotor.class, "FrontLeft");
+        FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
+
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
 
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -109,8 +113,7 @@ public class AutoHuskeyLens extends LinearOpMode {
         telemetry.update();
 
         Cam = hardwareMap.get(HuskyLens.class, "Cam");
-        FrontLeft = hardwareMap.get(DcMotor.class, "left_motor");
-        FrontRight = hardwareMap.get(DcMotor.class, "right_motor");
+
 
         Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
@@ -125,8 +128,10 @@ public class AutoHuskeyLens extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED,  -52,  -52, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-
+        encoderDrive(DRIVE_SPEED,  -65,  -65, 10, 600, 0.85);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   8, -8, 25, 325, 0.45);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(TURN_SPEED,   4, 15, 25, 750, 0.45);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
         while (opModeIsActive()) {
             if (!rateLimit.hasExpired()) {
