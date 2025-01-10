@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name = "Auto HL", group = "Sensor")
-public class AutoHuskeyLens extends LinearOpMode {
+@Autonomous(name = "Auto HL Try", group = "Sensor")
+public class GPThuskeyLenseAUTO extends LinearOpMode {
 
     private final int READ_PERIOD = 1; // Read period in seconds
     private HuskyLens Cam;
@@ -124,6 +124,10 @@ public class AutoHuskeyLens extends LinearOpMode {
         encoderDrive(TURN_SPEED, 16, 16, 25, 325, 0.2);  // S3: Turn Left 12 Inches with 4 Sec timeout
         encoderDrive(TURN_SPEED, 4, 22, 25, 750, 0.45);  // S4: Turn Right 12 Inches with 4 Sec timeout
 
+
+        FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         while (opModeIsActive()) {
             if (!rateLimit.hasExpired()) {
                 continue;
@@ -144,9 +148,10 @@ public class AutoHuskeyLens extends LinearOpMode {
                     telemetry.update();
 
                     if (block.height < 75) {
-                        telemetry.addData("HEIGHT", "Is < 75");
-                        FrontLeft.setPower(0.1);
-                        FrontRight.setPower(0.1);
+                        FrontLeft.setPower(0.5);
+                        FrontRight.setPower(0.5);
+
+                        /*telemetry.addData("")
 
                         while (block.height < 75 && opModeIsActive()) {
                             // Continuously check the height of the block
@@ -157,22 +162,23 @@ public class AutoHuskeyLens extends LinearOpMode {
 
                         // Once the block height is 75 or more, stop the motors
                         stopMotors();
+                        */
+
                     } else if (block.height > 79) {
-                        telemetry.addData("HEIGHT", "Is > 79");
                         FrontLeft.setPower(-0.5);
                         FrontRight.setPower(-0.5);
 
-                        sleep(100); // Pause for 100 ms
-                    } else {
-                        stopMotors();
+                        sleep(50); // Pause for 100 ms
+                    } else if( 75 < block.height && block.height< 79) {
+                        telemetry.addData("OBJECT IN CORRECT POSITION", "True");
+                        break;
                     }
 
-                    moveForward(0.5); // Move forward at 50% power
                 } else {
                     telemetry.addData("JIGGLE", searchDirection);
                     telemetry.update();
-                    FrontLeft.setPower(0.1 * searchDirection);
-                    FrontRight.setPower(0.1 * searchDirection);
+                    FrontLeft.setPower(0.05 * searchDirection);
+                    FrontRight.setPower(0.05 * searchDirection);
 
                     if (runtime.seconds() > 2.5) {
                         runtime.reset();
@@ -183,5 +189,10 @@ public class AutoHuskeyLens extends LinearOpMode {
 
             telemetry.update();
         }
+
+        FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        encoderDrive(0.2, 40, 40, 15, 250, 0.4);
     }
 }
