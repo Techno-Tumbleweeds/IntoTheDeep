@@ -147,12 +147,16 @@ public class AutoHuskeyLens extends LinearOpMode {
 
             for (HuskyLens.Block block : blocks) {
                 telemetry.addData("Block", block.toString());
+                telemetry.addData("Height", block.height);
+                telemetry.addData("Size", block.width);
 
 
                 // Example: Move forward if object with ID 1 is detected
-                if (block.id == 1) {
-                    if (block.height < 75){
-
+                if (blocks.length == 1) {
+                    telemetry.addData("TEST", "BLOCK DETECTED");
+                    telemetry.update();
+                    if ((long) block.height < 75){
+                        telemetry.addData("HEIGHT","Is < 75");
                         FrontLeft.setPower(0.1);
                         FrontRight.setPower(0.1);
 
@@ -168,10 +172,10 @@ public class AutoHuskeyLens extends LinearOpMode {
                         // Once the block height is 75 or more, stop the motors
                         FrontLeft.setPower(0);
                         FrontRight.setPower(0);
-                    } else if (block.height > 79) {
-
-                        FrontLeft.setPower(-0.1);
-                        FrontRight.setPower(-0.1);
+                    } else if ((long) block.height > 79) {
+                        telemetry.addData("HEIGHT","Is > 79");
+                        FrontLeft.setPower(-0.5);
+                        FrontRight.setPower(-0.5);
 
                         try {
                             Thread.sleep(100); // Pause for 100 ms
