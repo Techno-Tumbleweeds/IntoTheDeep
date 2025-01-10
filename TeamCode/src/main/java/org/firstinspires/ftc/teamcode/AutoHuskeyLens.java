@@ -183,6 +183,7 @@ public class AutoHuskeyLens extends LinearOpMode {
                             e.printStackTrace();
                         }
                     }else {
+                        telemetry.addData("ROBOT IS STOPPED", "TRUU");
                         FrontLeft.setPower(0);
                         FrontRight.setPower(0);
 
