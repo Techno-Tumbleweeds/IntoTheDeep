@@ -15,42 +15,62 @@ public class GPThuskeyLenseAUTO extends LinearOpMode {
     private HuskyLens Cam;
 
     // Declare motors
-    private DcMotor FrontLeft = null;
-    private DcMotor FrontRight = null;
+    private DcMotor FrontLeft;
+    private DcMotor FrontRight;
+    private DcMotor BackLeft;
+    private DcMotor BackRight;
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    static final double COUNTS_PER_MOTOR_REV = 537.7;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing
+    static final double COUNTS_PER_MOTOR_REV = 537.7;
+    static final double DRIVE_GEAR_REDUCTION = 1.0;
     static final double WHEEL_DIAMETER_INCHES = 4.09449;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
 
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double leftInches, double rightInches, double strafeDistance,
                              double timeoutS, long waitTime,
                              double motorSpeed) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftTarget = 0;
+        int newRightTarget = 0;
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = FrontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-            newRightTarget = FrontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            FrontLeft.setTargetPosition(newLeftTarget);
-            FrontRight.setTargetPosition(newRightTarget);
+            if (leftInches != 0){
+                newLeftTarget = FrontLeft.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+                newRightTarget = FrontRight.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+                FrontLeft.setTargetPosition(newLeftTarget);
+                FrontRight.setTargetPosition(newRightTarget);
+            }else{
+                FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            // Turn On RUN_TO_POSITION
+                strafeDistance = (int) (leftInches * COUNTS_PER_INCH);
+
+                FrontLeft.setTargetPosition((int) (0 - strafeDistance));
+                BackRight.setTargetPosition((int) (0 - strafeDistance));
+                FrontRight.setTargetPosition((int) strafeDistance);
+                BackLeft.setTargetPosition((int) strafeDistance);
+            }
+
+
             FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
+
             FrontLeft.setPower(Math.abs(speed) * motorSpeed);
+            BackRight.setPower(Math.abs(speed) * motorSpeed);
             FrontRight.setPower(Math.abs(speed) * motorSpeed);
+            BackLeft.setPower(Math.abs(speed) * motorSpeed);
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
@@ -83,6 +103,8 @@ public class GPThuskeyLenseAUTO extends LinearOpMode {
 
         FrontLeft = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
+        FrontLeft = hardwareMap.get(DcMotor.class, "BackLeft");
+        FrontRight = hardwareMap.get(DcMotor.class, "BackRight");
 
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -119,12 +141,13 @@ public class GPThuskeyLenseAUTO extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED, -80, -80, 10, 500, 0.85);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED, 10, -10, 25, 325, 0.5);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED, 16, 16, 25, 325, 0.2);  // S3: Turn Left 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED, 4, 22, 25, 750, 0.45);  // S4: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -80, -80, 10, 500, 750, 250, 0.85);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(TURN_SPEED, 10, -10, 25, 325, 750, 250, 0.5);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(TURN_SPEED, 16, 16, 25, 325, 750, 250, 0.2);  // S3: Turn Left 12 Inches with 4 Sec timeout
+        //encoderDrive(TURN_SPEED, 4, 22, 25, , 750, 250, 0.45);  // S4: Turn Right 12 Inches with 4 Sec timeout
 
-
+        encoderDrive(DRIVE_SPEED, 0, 0, 10, 10, 500, 250);
+ /*
         FrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -162,7 +185,7 @@ public class GPThuskeyLenseAUTO extends LinearOpMode {
 
                         // Once the block height is 75 or more, stop the motors
                         stopMotors();
-                        */
+
 
                     } else if (block.height > 79) {
                         FrontLeft.setPower(-0.5);
@@ -193,6 +216,8 @@ public class GPThuskeyLenseAUTO extends LinearOpMode {
         FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        encoderDrive(0.2, 40, 40, 15, 250, 0.4);
+
+        //encoderDrive(0.2, 40, 40, 15, 250, 0.4);
+        */
     }
 }
