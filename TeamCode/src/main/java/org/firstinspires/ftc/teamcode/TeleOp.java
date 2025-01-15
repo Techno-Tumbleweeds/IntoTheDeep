@@ -94,10 +94,10 @@ public class TeleOp extends OpMode {
  */
 
         //powers drivetrain
-        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x * 0.85)) * motorSpeed);
-        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x * 0.85)) * motorSpeed);
-        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
-        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (-gamepad1.right_stick_x)) * motorSpeed);
+        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x)) * motorSpeed);
+        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
 
         //sets speed of motors
         if (gamepad1.triangle) {
@@ -196,7 +196,7 @@ public class TeleOp extends OpMode {
 
         if (!ArmMotorL.isBusy()) {
             //Stop both motors when target position is reached
-            ArmMotorL.setPower(-gamepad2.right_stick_y);
+            ArmMotorL.setPower(gamepad2.right_stick_y);
             // Set motors back to RUN_USING_ENCODER mode for other operations
             ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
