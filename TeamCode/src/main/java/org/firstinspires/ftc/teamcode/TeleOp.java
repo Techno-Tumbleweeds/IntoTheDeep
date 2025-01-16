@@ -166,11 +166,11 @@ public class TeleOp extends OpMode {
         */
 
         //closes or opens claw
-        if (gamepad2.right_bumper) {
-            claw.setPosition(0.8);
+        if (gamepad2.right_bumper || 0 < gamepad2.right_trigger) {
+            claw.setPosition(0.5);
         }
         else{
-            claw.setPosition(0.5);
+            claw.setPosition(0.8);
         }
 
 
@@ -181,14 +181,14 @@ public class TeleOp extends OpMode {
         }
 
         if (armPos > ArmJoint.getCurrentPosition()) {
-            ArmJoint.setPower(Math.pow(1.03, 1.2 * (armPos - ArmJoint.getCurrentPosition())) - 1);
+            ArmJoint.setPower(Math.pow(1.03, 1.5 * (armPos - ArmJoint.getCurrentPosition())) - 1);
         } else {
             ArmJoint.setPower(-Math.pow(1.03, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
         }
         //manual control
         if (!ArmMotorR.isBusy()) {
             //Stop both motors when target position is reached
-            ArmMotorR.setPower(gamepad2.right_stick_y);
+            ArmMotorR.setPower(gamepad2.right_stick_y * 0.8);
             // Set motors back to RUN_USING_ENCODER mode for other operations
             ArmMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
@@ -200,6 +200,17 @@ public class TeleOp extends OpMode {
             // Set motors back to RUN_USING_ENCODER mode for other operations
             ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+
+        /*
+        if(gamepad2.dpad_up){
+            armPos = 214;
+        }
+        if(gamepad2.dpad_left){
+            armPos = 209;
+        }
+
+         */
+
 
         telemetry.addData("armPos:",armPos);
         telemetry.addData("distToPos:",distToPos);
