@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Push Samples", group="Robot")
-public class AutoTogether extends LinearOpMode {
+@Autonomous(name="Hanging Auto", group="Robot")
+public class HangAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor         FrontLeft   = null;
     private DcMotor         FrontRight  = null;
+    private DcMotor ArmJoint = null;
+    private DcMotor ArmMotorL = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -35,11 +37,16 @@ public class AutoTogether extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        Servo claw;
+        claw = hardwareMap.get(Servo.class, "claw");
+
 
         // Initialize the drive system variables.
         FrontLeft  = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRight = hardwareMap.get(DcMotor.class, "BackRight");
 
+        ArmJoint = hardwareMap.get(DcMotor.class, "ArmJoint");
+        ArmMotorL = hardwareMap.get(DcMotor.class, "ArmMotorL");
 
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -50,6 +57,7 @@ public class AutoTogether extends LinearOpMode {
 
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmJoint.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -57,6 +65,8 @@ public class AutoTogether extends LinearOpMode {
 
         FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ArmJoint.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -64,36 +74,100 @@ public class AutoTogether extends LinearOpMode {
                 FrontRight.getCurrentPosition());
         telemetry.update();
 
+        ArmJoint.setTargetPosition(38);
+
+        claw.setPosition(0.8);
+        double distToPos = 0;
+        double armPos = 80;
+        double movepower = 0;
+        double liftpower = 0;
+
         // Wait for the game to start (driver presses START)
         waitForStart();
-
         /*
-        FrontLeft.setPower(1);
-        sleep(2000);
-        FrontRight.setPower(1);
-        FrontLeft.setPower(0);
-        sleep(2000);
-        FrontRight.setPower(0);
+        while (getRuntime() < 20) {
+            opModeIsActive();
+            distToPos = armPos - ArmJoint.getCurrentPosition();
+            armPos = ArmJoint.getCurrentPosition() + distToPos;
 
+            if (armPos > ArmJoint.getCurrentPosition()) {
+                ArmJoint.setPower(Math.pow(1.02, 1.5 * (armPos - ArmJoint.getCurrentPosition())) - 1);
+            } else {
+                ArmJoint.setPower(-Math.pow(1.02, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
+            }
+
+            if (getRuntime() < 2){
+                movepower = -1;
+            } else if (getRuntime() > 2 && getRuntime() < 5){
+                movepower = -0.2;
+            }
+            else if (getRuntime() > 5 && getRuntime() < 8){
+                movepower = 0;
+                liftpower = 0.5;
+                armPos = 100;
+            }
+            else if (getRuntime() > 8 && getRuntime() < 10){
+                movepower = 0.2;
+                liftpower = 0.3;
+                armPos = 120;
+            }
+            ArmMotorL.setPower(liftpower);
+            FrontLeft.setPower(movepower);
+            FrontRight.setPower(movepower);
+        }
 
          */
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(0.25,  -52,  -52, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   3, -3, 10, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  48,  47, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -50,  -50, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(DRIVE_SPEED,  -9,  9, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,  4,  -4, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  20,  20, 10, 225);
-        encoderDrive(DRIVE_SPEED,  -4,  4, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  37,  37, 10, 225);
-        // encoderDrive(DRIVE_SPEED,  -48,  -48, 10, 225);
-       // encoderDrive(TURN_SPEED,  3,  -3, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-       // encoderDrive(DRIVE_SPEED,  45,  45, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -10,  -10, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+
+
+        encoderDrive(DRIVE_SPEED, -10, -12, 100, 500);
+
+
+        ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ArmJoint.setPower(0.225);
+
+        while (opModeIsActive() && ArmJoint.getCurrentPosition() <= 35) {
+            // Optionally, add telemetry to monitor the current position
+            telemetry.addData("Arm Position", ArmJoint.getCurrentPosition());
+            telemetry.update();
+        }
+        //ArmJoint.setPower(-.1); // Small power to hold position
+        ArmJoint.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmJoint.setPower(0);
+
+        // Set mode to RUN_USING_ENCODER or leave as is if no further movement is needed
+        ArmJoint.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        encoderDrive(DRIVE_SPEED, -12, -12, 100, 500);
+
+        //730
+        ArmMotorL.setTargetPosition(700);
+        ArmMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ArmMotorL.setPower(0.2);
+
+        while (opModeIsActive() && ArmMotorL.getCurrentPosition() <= 700) {
+            // Optionally, add telemetry to monitor the current position
+            telemetry.addData("Arm Position", ArmJoint.getCurrentPosition());
+            telemetry.update();
+        }
+        ArmMotorL.setPower(0);
+
+        encoderDrive(DRIVE_SPEED, -1, -1, 100, 500);
+        claw.setPosition(0.45);
+
+        ArmMotorL.setTargetPosition(200);
+        ArmMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ArmMotorL.setPower(0.2);
+
+        while (opModeIsActive() && ArmMotorL.getCurrentPosition() >= 200) {
+            // Optionally, add telemetry to monitor the current position
+            telemetry.addData("Arm Position", ArmJoint.getCurrentPosition());
+            telemetry.update();
+        }
+        ArmMotorL.setPower(0);
+
+
+
+
 
 
         telemetry.addData("Path", "Complete");
@@ -109,7 +183,8 @@ public class AutoTogether extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the OpMode running.
      */
-    public void encoderDrive(double speed,
+
+        public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS, long waitTime) {
         int newLeftTarget;
@@ -161,6 +236,10 @@ public class AutoTogether extends LinearOpMode {
             FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(waitTime);   // optional pause after each move.
+
+
         }
+
+
     }
 }

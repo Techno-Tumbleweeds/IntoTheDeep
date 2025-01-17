@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.robotcore.internal.system.Deadline;
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "Auto2", group = "Sensor")
+@Disabled
 public class AutoWithStrafing extends LinearOpMode {
 
     private final int READ_PERIOD = 1; // Read period in seconds
@@ -44,8 +46,8 @@ public class AutoWithStrafing extends LinearOpMode {
 
         if (opModeIsActive()) {
             // Calculate encoder targets for strafing
-            newLeftFrontTarget = FrontLeft.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
-            newRightFrontTarget = FrontRight.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
+            newLeftFrontTarget = FrontLeft.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
+            newRightFrontTarget = FrontRight.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
             newLeftBackTarget = BackLeft.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
             newRightBackTarget = BackRight.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
 
@@ -64,10 +66,10 @@ public class AutoWithStrafing extends LinearOpMode {
             runtime.reset();
 
             // Apply speed to the motors for strafing
-            FrontLeft.setPower(-speed);
+            FrontLeft.setPower(speed);
             FrontRight.setPower(speed);
             BackLeft.setPower(speed);
-            BackRight.setPower(-speed);
+            BackRight.setPower(speed);
 
             // Wait for the motion to complete
             while (opModeIsActive() && runtime.seconds() < timeoutS &&

@@ -21,6 +21,8 @@ public class TeleOp extends OpMode {
 
     //Sets variables
     double armPos = 0;
+    double liftPos = 0;
+    double distToPosLift = 0;
     double distToPos = 0;
    //double armPosfreeze;
     //boolean armFree = false;
@@ -63,6 +65,8 @@ public class TeleOp extends OpMode {
         //resets encoders in each motor in the lift kit
         ArmMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ArmMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        ArmMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Sets ArmJoint Encoders
         ArmJoint.setDirection(DcMotor.Direction.FORWARD);
@@ -94,10 +98,10 @@ public class TeleOp extends OpMode {
  */
 
         //powers drivetrain
-        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (-gamepad1.right_stick_x)) * motorSpeed);
-        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
-        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (-gamepad1.right_stick_x)) * motorSpeed);
-        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
 
         //sets speed of motors
         if (gamepad1.triangle) {
@@ -132,45 +136,14 @@ public class TeleOp extends OpMode {
         //ArmJoint.setPower(gamepad2.left_stick_y);
 
          */
-        /*
-        //detects button press to set servo mode to free
-        if (gamepad2.dpad_left){
-            armFree = !armFree;
-        }
 
-        //arm free
-        if (armFree){
-            armPos = -((gamepad2.left_stick_y)/2 - 0.5);
-        //arm up position
-        }else if (gamepad2.dpad_up){
-            armPos = 0.5;
-            armPosfreeze = armPos;
-        //arm down position
-        } else if (gamepad2.dpad_down){
-            armPos = 0.146;
-            armPosfreeze = armPos;
-        //arm start position
-        } else if (gamepad2.back){
-            armPos = 0.95;
-            armPosfreeze = armPos;
-        //arm grabbing position
-        } else if (gamepad2.left_bumper){
-            armPos = 0.05;
-        //arm back to last position before bumper
-        } else if (!gamepad2.left_bumper){
-            armPos = armPosfreeze;
-        }
-
-        //moves servo
-        ArmJoint.setPosition(armPos);
-        */
 
         //closes or opens claw
         if (gamepad2.right_bumper || 0 < gamepad2.right_trigger) {
-            claw.setPosition(0.5);
+            claw.setPosition(0.8);
         }
         else{
-            claw.setPosition(0.8);
+            claw.setPosition(0.5);
         }
 
 
@@ -181,10 +154,30 @@ public class TeleOp extends OpMode {
         }
 
         if (armPos > ArmJoint.getCurrentPosition()) {
-            ArmJoint.setPower(Math.pow(1.03, 1.5 * (armPos - ArmJoint.getCurrentPosition())) - 1);
+            ArmJoint.setPower(Math.pow(1.02, 1.5 * (armPos - ArmJoint.getCurrentPosition())) - 1);
         } else {
-            ArmJoint.setPower(-Math.pow(1.03, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
+            ArmJoint.setPower(-Math.pow(1.02, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
         }
+
+/*
+        distToPosLift = liftPos - ArmMotorL.getCurrentPosition();
+        liftPos = ArmMotorL.getCurrentPosition() + distToPosLift + 1 * gamepad2.right_stick_y;
+
+        if (gamepad2.b){
+            distToPosLift = 0;
+        }
+
+        if (liftPos > ArmMotorL.getCurrentPosition()) {
+            ArmMotorL.setPower(Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
+            ArmMotorR.setPower(Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
+            telemetry.addData("Arm Power:",Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
+        } else {
+            ArmMotorL.setPower(-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
+            ArmMotorR.setPower(-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
+            telemetry.addData("Arm Power:",-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
+        }
+
+ */
         //manual control
         if (!ArmMotorR.isBusy()) {
             //Stop both motors when target position is reached
@@ -201,6 +194,8 @@ public class TeleOp extends OpMode {
             ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
+
+
         /*
         if(gamepad2.dpad_up){
             armPos = 214;
@@ -211,12 +206,13 @@ public class TeleOp extends OpMode {
 
          */
 
+        liftPos = ArmMotorL.getCurrentPosition();
 
-        telemetry.addData("armPos:",armPos);
-        telemetry.addData("distToPos:",distToPos);
-        telemetry.addData("gamepad2.left_stick_y:",gamepad2.left_stick_y);
-        telemetry.addData("Arm Power:",0.02 * (armPos - ArmJoint.getCurrentPosition()));
-
+        telemetry.addData("liftPos:",liftPos);
+        telemetry.addData("distToPos:",distToPosLift);
+        //telemetry.addData("gamepad2.right_stick_y:",gamepad2.right_stick_y);
+        //telemetry.addData("Arm Power:",0.02 * (liftPos - ArmMotorL.getCurrentPosition()));
+        telemetry.addData("Arm Pos.", ArmJoint.getCurrentPosition());
         // Example telemetry for servo position
         //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
         telemetry.update();
