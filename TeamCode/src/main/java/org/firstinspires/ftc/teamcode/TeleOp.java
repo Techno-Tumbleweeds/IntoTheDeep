@@ -98,10 +98,10 @@ public class TeleOp extends OpMode {
  */
 
         //powers drivetrain
-        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
-        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
-        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
-        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
 
         //sets speed of motors
         if (gamepad1.triangle) {
