@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Push Samples", group="Robot")
-public class AutoTogether extends LinearOpMode {
+@Autonomous(name="Strafing", group="Robot")
+public class Strafing extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor         FrontLeft   = null;
@@ -94,8 +94,8 @@ public class AutoTogether extends LinearOpMode {
         //encoderDrive(TURN_SPEED,  -5,  5, 10, 300);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(DRIVE_SPEED,  36.5,  36.5, 10, 300);
         // encoderDrive(DRIVE_SPEED,  -48,  -48, 10, 225);
-       // encoderDrive(TURN_SPEED,  3,  -3, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-       // encoderDrive(DRIVE_SPEED,  45,  45, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        // encoderDrive(TURN_SPEED,  3,  -3, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
+        // encoderDrive(DRIVE_SPEED,  45,  45, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(-1,  -1,  -10, 10, 300);  // S1: Forward 47 Inches with 5 Sec timeout
         //sleep(9500);
         //encoderDrive(0.2,  8,  8, 10, 0);  // S1: Forward 47 Inches with 5 Sec timeout

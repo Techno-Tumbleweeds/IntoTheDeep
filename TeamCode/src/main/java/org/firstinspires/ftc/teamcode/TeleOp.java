@@ -148,7 +148,7 @@ public class TeleOp extends OpMode {
 
 
         distToPos = armPos - ArmJoint.getCurrentPosition();
-        armPos = ArmJoint.getCurrentPosition() + distToPos + 1 * gamepad2.left_stick_y;
+        armPos = ArmJoint.getCurrentPosition() + distToPos + 1.5 * gamepad2.left_stick_y;
         if (gamepad2.a){
             distToPos = 0;
         }
