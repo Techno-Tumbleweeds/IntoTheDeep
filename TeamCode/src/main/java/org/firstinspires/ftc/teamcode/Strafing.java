@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 //import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.FtcRobotControllerServiceState;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 //import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Strafing", group="Robot")
@@ -14,7 +12,9 @@ public class Strafing extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor         FrontLeft   = null;
-    private DcMotor         FrontRight  = null;
+    private DcMotor         FrontRight = null;
+    private DcMotor         BackLeft = null;
+    private DcMotor         BackRight = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -38,7 +38,10 @@ public class Strafing extends LinearOpMode {
 
         // Initialize the drive system variables.
         FrontLeft  = hardwareMap.get(DcMotor.class, "FrontLeft");
-        FrontRight = hardwareMap.get(DcMotor.class, "BackRight");
+        FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
+
+        BackLeft  = hardwareMap.get(DcMotor.class, "BackLeft");
+        BackRight = hardwareMap.get(DcMotor.class, "BackRight");
 
 
 
@@ -47,16 +50,24 @@ public class Strafing extends LinearOpMode {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
+        BackLeft.setDirection(DcMotor.Direction.FORWARD);
+        BackRight.setDirection(DcMotor.Direction.REVERSE);
 
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -67,43 +78,14 @@ public class Strafing extends LinearOpMode {
         // Wait for the game to start (driver presses START)
         waitForStart();
 
-        /*
-        FrontLeft.setPower(1);
-        sleep(2000);
-        FrontRight.setPower(1);
-        FrontLeft.setPower(0);
-        sleep(2000);
-        FrontRight.setPower(0);
-
-
-         */
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(0.3,  -51,  -51, 10, 400);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   -37, 37, 25, 500);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(TURN_SPEED,   3, -3, 10, 400);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED,  50,  50, 10, 400);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  -1,  -1, 10, 400);  // S1: Forward 47 Inches with 5 Sec timeout
-
-
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED,  -51,  -51, 10, 400);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(DRIVE_SPEED,  -9,  9, 10, 500);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,  4,  -4, 10, 400);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(DRIVE_SPEED,  18,  18, 10, 300);
-        //encoderDrive(TURN_SPEED,  -5,  5, 10, 300);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(DRIVE_SPEED,  36.5,  36.5, 10, 300);
-        // encoderDrive(DRIVE_SPEED,  -48,  -48, 10, 225);
-        // encoderDrive(TURN_SPEED,  3,  -3, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-        // encoderDrive(DRIVE_SPEED,  45,  45, 10, 225);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(-1,  -1,  -10, 10, 300);  // S1: Forward 47 Inches with 5 Sec timeout
-        //sleep(9500);
-        //encoderDrive(0.2,  8,  8, 10, 0);  // S1: Forward 47 Inches with 5 Sec timeout
 
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // pause to display final telemetry message.
+
+        encoderDrive(DRIVE_SPEED, 100, -100, -100,100, 10,500);
+
     }
 
     /*
@@ -115,29 +97,42 @@ public class Strafing extends LinearOpMode {
      *  3) Driver stops the OpMode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
+                             double FL, double FR,
+                             double BR, double BL,
                              double timeoutS, long waitTime) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newFLTarget;
+        int newFRTarget;
+        int newBLTarget;
+        int newBRTarget;
 
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = FrontLeft.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = FrontRight.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            FrontLeft.setTargetPosition(newLeftTarget);
-            FrontRight.setTargetPosition(newRightTarget);
+            newFLTarget = FrontLeft.getCurrentPosition() + (int)(FL * COUNTS_PER_INCH);
+            newFRTarget = FrontRight.getCurrentPosition() + (int)(FR * COUNTS_PER_INCH);
+            newBLTarget = BackLeft.getCurrentPosition() + (int)(BL * COUNTS_PER_INCH);
+            newBRTarget = BackRight.getCurrentPosition() + (int)(BR * COUNTS_PER_INCH);
+
+            FrontLeft.setTargetPosition(newFLTarget);
+            FrontRight.setTargetPosition(newFRTarget);
+            BackLeft.setTargetPosition(newBLTarget);
+            BackRight.setTargetPosition(newBRTarget);
 
             // Turn On RUN_TO_POSITION
             FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
+
             FrontLeft.setPower(Math.abs(speed));
             FrontRight.setPower(Math.abs(speed));
+            BackLeft.setPower(Math.abs(speed));
+            BackRight.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -145,25 +140,30 @@ public class Strafing extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (FrontLeft.isBusy() && FrontRight.isBusy())) {
+                    (FrontLeft.isBusy() && FrontRight.isBusy() && BackLeft.isBusy() && BackRight.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
+                telemetry.addData("Running to",  " %7d :%7d", newFLTarget, newFRTarget);
                 telemetry.addData("Currently at",  " at %7d :%7d",
                         FrontLeft.getCurrentPosition(), FrontRight.getCurrentPosition());
                 telemetry.update();
+
 
             }
 
             // Stop all motion;
             FrontLeft.setPower(0);
             FrontRight.setPower(0);
-
+            BackLeft.setPower(0);
+            BackRight.setPower(0);
             // Turn off RUN_TO_POSITION
             FrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             FrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            BackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             sleep(waitTime);   // optional pause after each move.
         }
