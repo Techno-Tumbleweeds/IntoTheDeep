@@ -55,17 +55,13 @@ public class TeleOp extends OpMode {
         BackRight.setDirection(DcMotor.Direction.REVERSE);
 
         //sets directions of arm motors
-        ArmMotorR.setDirection(DcMotorSimple.Direction.FORWARD);
-        //ArmMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
+        ArmMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //slows drop of lift kit
-        ArmMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ArmMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //resets encoders in each motor in the lift kit
-        ArmMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ArmMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ArmMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Sets ArmJoint Encoders
@@ -159,34 +155,29 @@ public class TeleOp extends OpMode {
             ArmJoint.setPower(-Math.pow(1.02, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
         }
 
-/*
+
         distToPosLift = liftPos - ArmMotorL.getCurrentPosition();
         liftPos = ArmMotorL.getCurrentPosition() + distToPosLift + 1 * gamepad2.right_stick_y;
 
+
         if (gamepad2.b){
             distToPosLift = 0;
+            telemetry.addData("RESET: ", "movement reset");
         }
 
         if (liftPos > ArmMotorL.getCurrentPosition()) {
-            ArmMotorL.setPower(Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
-            ArmMotorR.setPower(Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
+            ArmMotorL.setPower(Math.pow(1.02, 1 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
             telemetry.addData("Arm Power:",Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
         } else {
-            ArmMotorL.setPower(-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
-            ArmMotorR.setPower(-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
+            ArmMotorL.setPower(-Math.pow(1.02, 1 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
             telemetry.addData("Arm Power:",-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
         }
 
- */
-        //manual control
-        if (!ArmMotorR.isBusy()) {
-            //Stop both motors when target position is reached
-            ArmMotorR.setPower(gamepad2.right_stick_y * 0.8);
-            // Set motors back to RUN_USING_ENCODER mode for other operations
-            ArmMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
 
 
+
+
+/*
         if (!ArmMotorL.isBusy()) {
             //Stop both motors when target position is reached
             ArmMotorL.setPower(gamepad2.right_stick_y);
@@ -194,25 +185,14 @@ public class TeleOp extends OpMode {
             ArmMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
+*/
 
 
-        /*
-        if(gamepad2.dpad_up){
-            armPos = 214;
-        }
-        if(gamepad2.dpad_left){
-            armPos = 209;
-        }
 
-         */
-
-        liftPos = ArmMotorL.getCurrentPosition();
-
-        telemetry.addData("liftPos:",liftPos);
-        telemetry.addData("distToPos:",distToPosLift);
-        //telemetry.addData("gamepad2.right_stick_y:",gamepad2.right_stick_y);
-        //telemetry.addData("Arm Power:",0.02 * (liftPos - ArmMotorL.getCurrentPosition()));
-        telemetry.addData("Arm Pos.", ArmJoint.getCurrentPosition());
+        telemetry.addData("liftPos: ",liftPos);
+        telemetry.addData("ActualPos: ", ArmMotorL.getCurrentPosition());
+        telemetry.addData("distToPos: ",distToPosLift);
+        telemetry.addData("gamepad2.right_stick_y: ",gamepad2.right_stick_y);
         // Example telemetry for servo position
         //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
         telemetry.update();
