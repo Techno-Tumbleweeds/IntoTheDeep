@@ -55,7 +55,7 @@ public class TeleOp extends OpMode {
         BackRight.setDirection(DcMotor.Direction.REVERSE);
 
         //sets directions of arm motors
-        ArmMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
+        ArmMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //slows drop of lift kit
         ArmMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -144,7 +144,7 @@ public class TeleOp extends OpMode {
 
 
         distToPos = armPos - ArmJoint.getCurrentPosition();
-        armPos = ArmJoint.getCurrentPosition() + distToPos + 1.5 * gamepad2.left_stick_y;
+        armPos = ArmJoint.getCurrentPosition() + distToPos + 3 * gamepad2.left_stick_y;
         if (gamepad2.a){
             distToPos = 0;
         }
@@ -156,22 +156,16 @@ public class TeleOp extends OpMode {
         }
 
 
+
         distToPosLift = liftPos - ArmMotorL.getCurrentPosition();
-        liftPos = ArmMotorL.getCurrentPosition() + distToPosLift + 1 * gamepad2.right_stick_y;
-
-
+        liftPos = ArmMotorL.getCurrentPosition() + distToPosLift - 40 * gamepad2.right_stick_y;
         if (gamepad2.b){
             distToPosLift = 0;
             telemetry.addData("RESET: ", "movement reset");
         }
 
-        if (liftPos > ArmMotorL.getCurrentPosition()) {
-            ArmMotorL.setPower(Math.pow(1.02, 1 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
-            telemetry.addData("Arm Power:",Math.pow(1.02, 1.5 * (liftPos - ArmMotorL.getCurrentPosition())) - 1);
-        } else {
-            ArmMotorL.setPower(-Math.pow(1.02, 1 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
-            telemetry.addData("Arm Power:",-Math.pow(1.02, 1.2 * (ArmMotorL.getCurrentPosition() - liftPos)) + 1);
-        }
+        ArmMotorL.setPower(-(liftPos - ArmMotorL.getCurrentPosition())/200);
+        telemetry.addData("Arm Power:",(liftPos - ArmMotorL.getCurrentPosition())/200);
 
 
 
