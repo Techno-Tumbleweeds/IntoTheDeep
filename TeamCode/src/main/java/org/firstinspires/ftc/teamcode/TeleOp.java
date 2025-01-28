@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
 public class TeleOp extends OpMode {
@@ -18,6 +21,7 @@ public class TeleOp extends OpMode {
     DcMotor ArmMotorL;
     DcMotor ArmJoint;
     Servo claw;
+    Servo clawmove;
 
     //Sets variables
     double armPos = 0;
@@ -29,6 +33,8 @@ public class TeleOp extends OpMode {
     double motorSpeed = 0.8;
     //boolean isMoving = false;
     //double armPosfreeze = 0.35;
+
+    double RotatePos = 0.5;
 
     private long lastUpdateTime = 0; // Store the last time the variable was updated
     private static final long UPDATE_INTERVAL = 200; // Interval in milliseconds (0.5 seconds)
@@ -47,6 +53,7 @@ public class TeleOp extends OpMode {
 
         //finds components in robot configuration (Servos)
         claw = hardwareMap.get(Servo.class, "claw");
+        clawmove = hardwareMap.get(Servo.class, "clawmove");
 
         //sets directions of movement motors
         FrontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -180,7 +187,20 @@ public class TeleOp extends OpMode {
         }
 
 */
+        ElapsedTime buttonTimer = new ElapsedTime(); // Timer for button control
 
+
+        if (gamepad2.dpad_right && buttonTimer.milliseconds() > 150) { // 150ms delay
+            RotatePos += 0.075; // Increment value
+            buttonTimer.reset(); // Reset timer
+        }
+
+        if (gamepad2.dpad_left && buttonTimer.milliseconds() > 150) { // 150ms delay
+            RotatePos += -0.075; // Increment value
+            buttonTimer.reset(); // Reset timer
+        }
+
+        clawmove.setPosition(RotatePos);
 
 
         telemetry.addData("liftPos: ",liftPos);
