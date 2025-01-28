@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
+
 import java.util.concurrent.TimeUnit;
 
 @Autonomous(name = "Auto2", group = "Sensor")
@@ -40,16 +42,13 @@ public class AutoWithStrafing extends LinearOpMode {
         BackRight.setPower(0);
     }
 
-    public void strafeDrive (double strafeDistance, double speed, long wait){
-
-        int newLeftFrontTarget = 0, newRightFrontTarget = 0, newLeftBackTarget = 0, newRightBackTarget = 0;
-
+    public void strafeDrive(double strafeDistance, double speed, long wait) {
         if (opModeIsActive()) {
             // Calculate encoder targets for strafing
-            newLeftFrontTarget = FrontLeft.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
-            newRightFrontTarget = FrontRight.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
-            newLeftBackTarget = BackLeft.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
-            newRightBackTarget = BackRight.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
+            int newLeftFrontTarget = FrontLeft.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
+            int newRightFrontTarget = FrontRight.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
+            int newLeftBackTarget = BackLeft.getCurrentPosition() + (int) (strafeDistance * COUNTS_PER_INCH);
+            int newRightBackTarget = BackRight.getCurrentPosition() - (int) (strafeDistance * COUNTS_PER_INCH);
 
             // Set targets
             FrontLeft.setTargetPosition(newLeftFrontTarget);
@@ -88,6 +87,7 @@ public class AutoWithStrafing extends LinearOpMode {
             sleep(wait);
         }
     }
+
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,

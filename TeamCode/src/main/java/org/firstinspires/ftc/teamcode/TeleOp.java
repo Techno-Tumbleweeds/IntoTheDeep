@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 //imports packages
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp")
@@ -38,6 +37,8 @@ public class TeleOp extends OpMode {
 
     private long lastUpdateTime = 0; // Store the last time the variable was updated
     private static final long UPDATE_INTERVAL = 200; // Interval in milliseconds (0.5 seconds)
+
+    ElapsedTime buttonTimer = new ElapsedTime();
 
 
     @Override
@@ -101,18 +102,24 @@ public class TeleOp extends OpMode {
  */
 
         //powers drivetrain
+        FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+        BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
+        FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
+/*
         FrontRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
         FrontLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) + (gamepad1.right_stick_x)) * motorSpeed);
         BackLeft.setPower((((gamepad1.right_trigger - gamepad1.left_trigger + gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
         BackRight.setPower((((gamepad1.right_trigger - gamepad1.left_trigger - gamepad1.left_stick_x)) - (gamepad1.right_stick_x)) * motorSpeed);
 
+ */
         //sets speed of motors
         if (gamepad1.triangle) {
-            motorSpeed = 0.8;
+            motorSpeed = 0.7;
         } else if (gamepad1.square) {
-            motorSpeed = 0.5;
+            motorSpeed = 0.55;
         } else if (gamepad1.cross) {
-            motorSpeed = 0.275;
+            motorSpeed = 0.27;
         }
         /*
 
@@ -143,13 +150,15 @@ public class TeleOp extends OpMode {
 
         //closes or opens claw
         if (gamepad2.right_bumper || 0 < gamepad2.right_trigger) {
-            claw.setPosition(0.8);
+            claw.setPosition(0.155);
+            //0.45
         }
         else{
-            claw.setPosition(0.5);
+            claw.setPosition(0.4);
         }
 
 
+/*
         distToPos = armPos - ArmJoint.getCurrentPosition();
         armPos = ArmJoint.getCurrentPosition() + distToPos + 3 * gamepad2.left_stick_y;
         if (gamepad2.a){
@@ -159,9 +168,66 @@ public class TeleOp extends OpMode {
         if (armPos > ArmJoint.getCurrentPosition()) {
             ArmJoint.setPower(Math.pow(1.02, 1.5 * (armPos - ArmJoint.getCurrentPosition())) - 1);
         } else {
-            ArmJoint.setPower(-Math.pow(1.02, 1.2 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
+            ArmJoint.setPower(-Math.pow(1.02, 1.5 * (ArmJoint.getCurrentPosition() - armPos)) + 1);
         }
 
+ */
+
+
+        /*
+        double kP = 0.01; // Tune this value
+        double error = armPos - ArmJoint.getCurrentPosition();
+
+
+// Adjust armPos only when stick is moved significantly
+        if (Math.abs(gamepad2.left_stick_y) > 0.05) {
+            armPos += 3 * gamepad2.left_stick_y;
+        }
+
+// Reset position when button is pressed
+        if (gamepad2.a) {
+            distToPos = 0;
+        }
+
+// Apply smooth power control
+        double power = kP * error;
+        power = Range.clip(power, -1, 1); // Keep power in range
+
+// Stop small jittering movements
+        if (Math.abs(error) < 5) {
+            power = 0;
+        }*/
+
+
+/*
+        if (gamepad2.x && buttonTimer.milliseconds() > 300) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmJoint.setTargetPosition(100); // Set target position for X button
+            ArmJoint.setPower(0.5);
+            buttonTimer.reset();  // Reset the timer after button press
+        } else if (gamepad2.y && buttonTimer.milliseconds() > 300) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmJoint.setTargetPosition(200); // Set target position for Y button
+            ArmJoint.setPower(0.5);
+            buttonTimer.reset();  // Reset the timer after button press
+        } else if (gamepad2.a && buttonTimer.milliseconds() > 300) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmJoint.setTargetPosition(300); // Set target position for A button
+            ArmJoint.setPower(0.5);
+            buttonTimer.reset();  // Reset the timer after button press
+        } else if (gamepad2.b && buttonTimer.milliseconds() > 300) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmJoint.setTargetPosition(400); // Set target position for B button
+            ArmJoint.setPower(0.5);
+            buttonTimer.reset();  // Reset the timer after button press
+        } else if (!ArmJoint.isBusy()) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Return to normal mode
+            ArmJoint.setPower(gamepad2.left_stick_y);  // Stop motor when target position is reached
+        }else {
+            ArmJoint.setPower(gamepad2.left_stick_y);  // Stop motor when target position is reached
+        }
+
+ */
 
 
         distToPosLift = liftPos - ArmMotorL.getCurrentPosition();
@@ -174,6 +240,14 @@ public class TeleOp extends OpMode {
         ArmMotorL.setPower(-(liftPos - ArmMotorL.getCurrentPosition())/200);
         telemetry.addData("Arm Power:",(liftPos - ArmMotorL.getCurrentPosition())/200);
 
+        if (gamepad2.y) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            ArmJoint.setTargetPosition(69);
+            ArmJoint.setPower(0.35);
+        } else if (!gamepad2.y) {
+            ArmJoint.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            ArmJoint.setPower(gamepad2.left_stick_y/2);
+        }
 
 
 
@@ -190,23 +264,32 @@ public class TeleOp extends OpMode {
         ElapsedTime buttonTimer = new ElapsedTime(); // Timer for button control
 
 
-        if (gamepad2.dpad_right && buttonTimer.milliseconds() > 150) { // 150ms delay
-            RotatePos += 0.075; // Increment value
+        if (gamepad2.dpad_left||gamepad1.dpad_left ) { // 150ms delay
+            RotatePos += 0.01; // Increment value
+            //RotatePos = Range.clip(RotatePos, 0.5, 1.0); // Clamp value
             buttonTimer.reset(); // Reset timer
-        }
-
-        if (gamepad2.dpad_left && buttonTimer.milliseconds() > 150) { // 150ms delay
-            RotatePos += -0.075; // Increment value
+        } else if (gamepad2.dpad_right||gamepad1.dpad_right) {
+            RotatePos -= 0.01; // Decrement value
+            //RotatePos = Range.clip(RotatePos, 0.05, 1.0); // Clamp value
             buttonTimer.reset(); // Reset timer
+        }else if(gamepad2.dpad_up||gamepad1.dpad_up){
+            RotatePos = 0.5;
+        }else if (gamepad2.dpad_down||gamepad1.dpad_down){
+            RotatePos = 0.17;
         }
-
         clawmove.setPosition(RotatePos);
+
 
 
         telemetry.addData("liftPos: ",liftPos);
         telemetry.addData("ActualPos: ", ArmMotorL.getCurrentPosition());
         telemetry.addData("distToPos: ",distToPosLift);
         telemetry.addData("gamepad2.right_stick_y: ",gamepad2.right_stick_y);
+        telemetry.addData("Servo Open Pos", claw.getPosition());
+        telemetry.addData("Rotate Pos", RotatePos);
+        telemetry.addData("ArmJoint", ArmJoint);
+
+
         // Example telemetry for servo position
         //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);
         telemetry.update();
