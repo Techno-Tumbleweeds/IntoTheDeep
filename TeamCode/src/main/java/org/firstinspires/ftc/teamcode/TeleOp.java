@@ -33,7 +33,7 @@ public class TeleOp extends OpMode {
     //boolean isMoving = false;
     //double armPosfreeze = 0.35;
 
-    double RotatePos = 0.5;
+    double RotatePos = 0.15;
 
     private long lastUpdateTime = 0; // Store the last time the variable was updated
     private static final long UPDATE_INTERVAL = 200; // Interval in milliseconds (0.5 seconds)
@@ -150,11 +150,14 @@ public class TeleOp extends OpMode {
 
         //closes or opens claw
         if (gamepad2.right_bumper || 0 < gamepad2.right_trigger) {
-            claw.setPosition(0.155);
+            claw.setPosition(-0.3);
             //0.45
         }
         else{
-            claw.setPosition(0.4);
+            claw.setPosition(0.25);
+        }
+        if (gamepad2.left_bumper) {
+            claw.setPosition(1);
         }
 
 
@@ -242,7 +245,7 @@ public class TeleOp extends OpMode {
 
         if (gamepad2.y) {
             ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            ArmJoint.setTargetPosition(69);
+            ArmJoint.setTargetPosition(-100);
             ArmJoint.setPower(0.35);
         } else if (!gamepad2.y) {
             ArmJoint.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -273,9 +276,9 @@ public class TeleOp extends OpMode {
             //RotatePos = Range.clip(RotatePos, 0.05, 1.0); // Clamp value
             buttonTimer.reset(); // Reset timer
         }else if(gamepad2.dpad_up||gamepad1.dpad_up){
-            RotatePos = 0.5;
+            RotatePos = 0.48;
         }else if (gamepad2.dpad_down||gamepad1.dpad_down){
-            RotatePos = 0.17;
+            RotatePos = 0.15;
         }
         clawmove.setPosition(RotatePos);
 
@@ -287,7 +290,7 @@ public class TeleOp extends OpMode {
         telemetry.addData("gamepad2.right_stick_y: ",gamepad2.right_stick_y);
         telemetry.addData("Servo Open Pos", claw.getPosition());
         telemetry.addData("Rotate Pos", RotatePos);
-        telemetry.addData("ArmJoint", ArmJoint);
+        telemetry.addData("ArmJoint", ArmJoint.getCurrentPosition());
 
 
         // Example telemetry for servo position
