@@ -12,7 +12,7 @@ public class Auto1 extends LinearOpMode {
     private DcMotor BackLeft;
     private DcMotor BackRight;
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -32,30 +32,79 @@ public class Auto1 extends LinearOpMode {
         BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        FrontLeft.setTargetPosition(0);
+        FrontRight.setTargetPosition(0);
+        BackLeft.setTargetPosition(0);
+        BackRight.setTargetPosition(0);
 
         waitForStart();
 
-        drive(0.1, 900, 1, 1, 1, 1, 10);
-        sleep(20000);
+        //preloaded sample
+
+        //strafe off the wall
+        drive(0.2, 200, 1, -1, -1, 1, 5);
+        //push the sample to wing and backs out
+        drive(0.4, 880, 1, 1, 1, 1, 5);
+        drive(0.4, 880, -1, -1, -1, -1, 5);
+        //turns facing the wall and squares
+        drive(0.4, 1000, -1, 1, -1, 1, 15);
+        drive(0.3, 165, 1, 1, 1, 1, 5);
+        //backs up
+        drive(0.3, 2100, -1, -1, -1, -1, 20);
+
+        //first sample
+
+        //strafes to line up with first sample
+        drive(0.2, 400, 1, -1, -1, 1, 5);
+        //turns to better push sample in
+        drive(0.2, 94, 1, 0, 1, 0, 5);
+        //pushes sample into wing and backs out
+        drive(0.4, 1775, 1, 1, 1, 1, 5);
+        drive(0.4, 1790, -1, -1, -1, -1, 5);
+
+        //2nd sample
+
+        //strafes to 2nd sample
+        drive(0.2, 575, 1, -1, -1, 1, 5);
+        //squares to 2nd sample sample
+        drive(0.2, 85, 0, 1, 0, 1, 5);
+
+        drive(0.4, 1450, 1, 1, 1, 1, 5);
+
+        drive(0.4, 1200, -1, -1, -1, -1, 5);
+
+        drive(0.4, 950, 1, -1, 1, -1, 15);
+
+        drive(0.4, 325, -1, -1, -1, -1, 5);
+
+        //drive(0.4, 2000, -1, -1, -1, -1, 5);
+
     }
     public void drive(double speed, int targetPos,
-                      double flDirection, double frDirection,
-                      double blDirection, double brDirection,
+                      int flDirection, int frDirection,
+                      int blDirection, int brDirection,
                       double Timeout) {
-        FrontLeft.setTargetPosition(targetPos);
-        FrontRight.setTargetPosition(targetPos);
-        BackLeft.setTargetPosition(targetPos);
-        BackRight.setTargetPosition(targetPos);
+
+        FrontLeft.setTargetPosition(FrontLeft.getTargetPosition() + (targetPos * flDirection));
+        FrontRight.setTargetPosition(FrontRight.getTargetPosition() + (targetPos * frDirection));
+        BackLeft.setTargetPosition(BackLeft.getTargetPosition() + (targetPos * blDirection));
+        BackRight.setTargetPosition(BackRight.getTargetPosition() + (targetPos * brDirection));
 
         FrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         FrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        FrontLeft.setPower(flDirection*speed);
-        FrontRight.setPower(frDirection*speed);
-        BackLeft.setPower(blDirection*speed);
-        BackRight.setPower(brDirection*speed);
+        runtime.reset();
+        FrontLeft.setPower(speed * flDirection);
+        FrontRight.setPower(speed * frDirection);
+        BackLeft.setPower(speed * blDirection);
+        BackRight.setPower(speed * brDirection);
 
         while (opModeIsActive() &&
                 (runtime.seconds() < Timeout) &&
@@ -73,5 +122,7 @@ public class Auto1 extends LinearOpMode {
         FrontRight.setPower(0);
         BackLeft.setPower(0);
         BackRight.setPower(0);
+
+        sleep(475);
     }
 }
