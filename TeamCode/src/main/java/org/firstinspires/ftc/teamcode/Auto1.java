@@ -1,41 +1,28 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Paint;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Left Auto", group="Robot")
+@Autonomous(name="Auto1 Current", group="Robot")
 public class Auto1 extends LinearOpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor BackLeft;
     private DcMotor BackRight;
 
-    DcMotor ArmJoint;
-
-    Servo claw;
-    Servo clawmove;
-
-
-
     private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
-        claw = hardwareMap.get(Servo.class, "claw");
-        clawmove = hardwareMap.get(Servo.class, "clawmove");
+
 
         // Initialize the drive system variables.
         FrontLeft = hardwareMap.get(DcMotor.class, "FrontLeft");
         FrontRight = hardwareMap.get(DcMotor.class, "FrontRight");
         BackLeft = hardwareMap.get(DcMotor.class, "BackLeft");
         BackRight = hardwareMap.get(DcMotor.class, "BackRight");
-
-        ArmJoint = hardwareMap.get(DcMotor.class, "ArmJoint");
 
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
         BackRight.setDirection(DcMotor.Direction.REVERSE);
@@ -44,9 +31,6 @@ public class Auto1 extends LinearOpMode {
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        ArmJoint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
 
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -58,15 +42,12 @@ public class Auto1 extends LinearOpMode {
         BackLeft.setTargetPosition(0);
         BackRight.setTargetPosition(0);
 
-        ArmJoint.setTargetPosition(0);
-
-
         waitForStart();
 
         //preloaded sample
 
         //strafe off the wall
-        drive(0.25, 200, 1, -1, -1, 1, 5);
+        drive(0.2, 200, 1, -1, -1, 1, 5);
         //push the sample to wing and backs out
         drive(0.4, 880, 1, 1, 1, 1, 5);
         drive(0.4, 880, -1, -1, -1, -1, 5);
@@ -81,7 +62,7 @@ public class Auto1 extends LinearOpMode {
         //strafes to line up with first sample
         drive(0.2, 400, 1, -1, -1, 1, 5);
         //turns to better push sample in
-        drive(0.2, 96, 1, 0, 1, 0, 5);
+        drive(0.2, 94, 1, 0, 1, 0, 5);
         //pushes sample into wing and backs out
         drive(0.4, 1775, 1, 1, 1, 1, 5);
         drive(0.4, 1790, -1, -1, -1, -1, 5);
@@ -89,37 +70,19 @@ public class Auto1 extends LinearOpMode {
         //2nd sample
 
         //strafes to 2nd sample
-        drive(0.2, 425, 1, -1, -1, 1, 5);
+        drive(0.2, 575, 1, -1, -1, 1, 5);
         //squares to 2nd sample sample
         drive(0.2, 85, 0, 1, 0, 1, 5);
 
         drive(0.4, 1450, 1, 1, 1, 1, 5);
 
-        drive(0.45, 1050, -1, -1, -1, -1, 5);
+        drive(0.4, 1200, -1, -1, -1, -1, 5);
 
         drive(0.4, 950, 1, -1, 1, -1, 15);
 
-        drive(0.6, 525, -1, -1, -1, -1, 5);
+        drive(0.4, 325, -1, -1, -1, -1, 5);
 
-        claw.setPosition(0.25);
-
-        ArmJoint.setTargetPosition(3000);
-        ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        runtime.reset();
-        ArmJoint.setPower(0.35);
-
-        while (opModeIsActive() &&
-                (ArmJoint.isBusy()) && runtime.seconds() < 5) {
-
-            clawmove.setPosition(0.15);
-
-            // Display it for the driver
-            //telemetry.addData("Running to", " %7d :%7d", newLeftFTarget, newRightFTarget);
-            telemetry.addData("Currently at", ArmJoint.getCurrentPosition());
-            telemetry.update();
-        }
-
-        ArmJoint.setPower(0);
+        //drive(0.4, 2000, -1, -1, -1, -1, 5);
 
     }
     public void drive(double speed, int targetPos,
