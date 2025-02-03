@@ -290,6 +290,12 @@ public class TeleOp extends OpMode {
         telemetry.addData("Rotate Pos", RotatePos);
         telemetry.addData("ArmJoint", ArmJoint.getCurrentPosition());
 
+        telemetry.addData("ActualPos: ", ArmMotorL.getPower());
+
+        telemetry.addData("Arm Power", ArmJoint.getPower());
+
+
+
 
         // Example telemetry for servo position
         //telemetry.addData("Trigger value: ", gamepad2.left_stick_y / 2 + armPos);

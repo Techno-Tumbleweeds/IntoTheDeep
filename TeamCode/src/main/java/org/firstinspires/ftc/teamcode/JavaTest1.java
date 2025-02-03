@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,8 @@ public class JavaTest1 extends LinearOpMode {
     private DcMotor BackRight;
 
     DcMotor ArmJoint;
+
+    DcMotor LiftKit;
 
     Servo claw;
     Servo clawmove;
@@ -37,8 +40,15 @@ public class JavaTest1 extends LinearOpMode {
 
         ArmJoint = hardwareMap.get(DcMotor.class, "ArmJoint");
 
+        LiftKit = hardwareMap.get(DcMotor.class, "ArmMotorL");
+
+
+
         FrontRight.setDirection(DcMotor.Direction.REVERSE);
         BackRight.setDirection(DcMotor.Direction.REVERSE);
+
+        //LiftKit.setDirection(DcMotor.Direction.REVERSE);
+
 
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -46,23 +56,151 @@ public class JavaTest1 extends LinearOpMode {
         BackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         ArmJoint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LiftKit.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
 
 
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LiftKit.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        ArmJoint.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        LiftKit.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         FrontLeft.setTargetPosition(0);
         FrontRight.setTargetPosition(0);
         BackLeft.setTargetPosition(0);
         BackRight.setTargetPosition(0);
 
-        ArmJoint.setTargetPosition(0);
+        ArmJoint.setTargetPosition(2275);
 
+        double liftPos = 1300;
+        double distToPosLift = liftPos - LiftKit.getCurrentPosition();
+
+        clawmove.setPosition(0.48);
+
+
+        claw.setPosition(0);
+        sleep(900);
+        claw.setPosition(0.27);
+        sleep(900);
+        claw.setPosition(0);
+        sleep(900);
 
         waitForStart();
 
+
+
+
+        drive(0.35, 100, 1, -1, -1, 1, 5);
+
+        ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ArmJoint.setPower(0.45);
+
+        while (distToPosLift > 50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.2);
+
+        while (ArmJoint.isBusy() && opModeIsActive()){
+            telemetry.addData("ArmPosition: ", ArmJoint.getCurrentPosition());
+            telemetry.addData("Arm Power:", ArmJoint.getPower());
+            telemetry.update();
+        }
+
+        ArmJoint.setPower(-0.09);
+
+        drive(0.35, 400, 1, 1, 1, 1, 5);
+
+        drive(0.35, 250, -1, 1, -1, 1, 5);
+        sleep(300);
+        claw.setPosition(0.28);
+
+        sleep(300);
+
+        drive(0.35, 225, -1, -1, -1, -1, 5);
+
+
+        drive(0.35, 1200, 1, -1, 1, -1, 5);
+
+        ArmJoint.setTargetPosition(3750);
+        ArmJoint.setPower(0.3);
+
+        drive(0.3, 400, -1, -1, -1, -1, 5);
+
+        drive(0.35, 800, 1, 1, 1, 1, 5);
+
+        sleep(300);
+        claw.setPosition(0.28);
+
+        drive(0.35, 225, -1, 1, 1, -1, 5);
+
+        LiftKit.setTargetPosition(0);
+        LiftKit.setPower(0.6);
+        sleep(2000);
+        claw.setPosition(0);
+        sleep(300);
+
+        ArmJoint.setTargetPosition(2330);
+        LiftKit.setTargetPosition(1700);
+        LiftKit.setPower(-0.6);
+        sleep(100);
+
+        drive(0.35, 1500, -1, 1, -1, 1, 5);
+
+        drive(0.35, 400, 1, 1, 1, 1, 5);
+        sleep(300);
+        claw.setPosition(0.28);
+
+        drive(0.35, 1200, -1, -1, -1, -1, 5);
+        clawmove.setPosition(0.15);
+        drive(0.35, 600, 1, -1, 1, -1, 5);
+        ArmJoint.setTargetPosition(3750);
+        sleep(200);
+        drive(0.35, 300, 1, -1, -1, 1, 5);
+
+        drive(0.35, 145, 1, 1, 1, 1, 5);
+
+        LiftKit.setTargetPosition(0);
+        LiftKit.setPower(0.6);
+        sleep(1000);
+        claw.setPosition(0);
+
+
+
+
+
+
+        /*
+        liftPos = 300;
+
+        while (distToPosLift > 50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+
+        drive(0.5, 425, -1, -1, -1, -1, 5);
+
+         */
+
+
+        sleep(2000);
     }
     public void drive(double speed, int targetPos,
                       int flDirection, int frDirection,
@@ -102,6 +240,6 @@ public class JavaTest1 extends LinearOpMode {
         BackLeft.setPower(0);
         BackRight.setPower(0);
 
-        sleep(475);
+        sleep(200); //was 800
     }
 }
