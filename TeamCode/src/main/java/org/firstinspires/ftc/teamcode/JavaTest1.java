@@ -48,8 +48,6 @@ public class JavaTest1 extends LinearOpMode {
         BackRight.setDirection(DcMotor.Direction.REVERSE);
 
         //LiftKit.setDirection(DcMotor.Direction.REVERSE);
-
-
         FrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         BackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,13 +56,11 @@ public class JavaTest1 extends LinearOpMode {
         ArmJoint.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LiftKit.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
-
         FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BackRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         LiftKit.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         ArmJoint.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -82,23 +78,18 @@ public class JavaTest1 extends LinearOpMode {
 
         clawmove.setPosition(0.48);
 
-
-        claw.setPosition(0);
-        sleep(900);
-        claw.setPosition(0.27);
-        sleep(900);
-        claw.setPosition(0);
-        sleep(900);
+        //intializes claw
+        claw.setPosition(1);
+        sleep(250);
+        claw.setPosition(0.6);        sleep(1200);
+        claw.setPosition(1);
 
         waitForStart();
-
-
-
-
+        //strafes off wall
         drive(0.35, 100, 1, -1, -1, 1, 5);
 
         ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        ArmJoint.setPower(0.45);
+        /*ArmJoint.setPower(0.6);
 
         while (distToPosLift > 50 && opModeIsActive()){
             distToPosLift = liftPos - LiftKit.getCurrentPosition();
@@ -120,12 +111,19 @@ public class JavaTest1 extends LinearOpMode {
 
         ArmJoint.setPower(-0.09);
 
-        drive(0.35, 400, 1, 1, 1, 1, 5);
+         */
+        //moves lift kit
+        LiftKit.setTargetPosition(1300);
+        LiftKit.setPower(-0.6);
+        sleep(200);
+        ArmJoint.setTargetPosition(2275);
+        ArmJoint.setPower(0.6);
+        //
+        drive(0.35, 300, 1, 1, 1, 1, 5);
 
         drive(0.35, 250, -1, 1, -1, 1, 5);
-        sleep(300);
-        claw.setPosition(0.28);
-
+        sleep(1000);
+        claw.setPosition(0.6);
         sleep(300);
 
         drive(0.35, 225, -1, -1, -1, -1, 5);
@@ -136,45 +134,88 @@ public class JavaTest1 extends LinearOpMode {
         ArmJoint.setTargetPosition(3750);
         ArmJoint.setPower(0.3);
 
+        //backs up into wall
         drive(0.3, 400, -1, -1, -1, -1, 5);
 
-        drive(0.35, 800, 1, 1, 1, 1, 5);
+        drive(0.35, 785, 1, 1, 1, 1, 5);
 
         sleep(300);
-        claw.setPosition(0.28);
+        claw.setPosition(0.6);
+        drive(0.35, 350, -1, 1, 1, -1, 5);
 
-        drive(0.35, 225, -1, 1, 1, -1, 5);
-
-        LiftKit.setTargetPosition(0);
+        /*LiftKit.setTargetPosition(175);
         LiftKit.setPower(0.6);
         sleep(2000);
-        claw.setPosition(0);
-        sleep(300);
+        claw.setPosition(1);
+        sleep(200);
 
         ArmJoint.setTargetPosition(2330);
         LiftKit.setTargetPosition(1700);
         LiftKit.setPower(-0.6);
-        sleep(100);
+        sleep(1000);
+
+         */
+
+        LiftKit.setTargetPosition(1200);
+        LiftKit.setPower(0.6);
+        sleep(1500);
+        claw.setPosition(1);
+
+        sleep(500);
+
+        LiftKit.setTargetPosition(1300);
+        LiftKit.setPower(-0.6);
+        ArmJoint.setTargetPosition(2330);
+        ArmJoint.setPower(-0.5);
 
         drive(0.35, 1500, -1, 1, -1, 1, 5);
 
         drive(0.35, 400, 1, 1, 1, 1, 5);
-        sleep(300);
-        claw.setPosition(0.28);
+        sleep(700);
+        //drops second sample
+        claw.setPosition(0.6);
+        sleep(680);
 
         drive(0.35, 1200, -1, -1, -1, -1, 5);
         clawmove.setPosition(0.15);
         drive(0.35, 600, 1, -1, 1, -1, 5);
-        ArmJoint.setTargetPosition(3750);
+        ArmJoint.setTargetPosition(3650);
         sleep(200);
-        drive(0.35, 300, 1, -1, -1, 1, 5);
+        //strafe right before picking up last sample
+        drive(0.3, 190, 1, -1, -1, 1, 5);
 
-        drive(0.35, 145, 1, 1, 1, 1, 5);
+        drive(0.35, 195, 1, 1, 1, 1, 5);
 
         LiftKit.setTargetPosition(0);
         LiftKit.setPower(0.6);
+        sleep(1500);
+        claw.setPosition(1);
+
+        //lifts kit after grabbing 3rd sample
+        sleep(200);
+
+        LiftKit.setTargetPosition(1300);
+        LiftKit.setPower(-0.6);
+        ArmJoint.setTargetPosition(2330);
+        ArmJoint.setPower(-0.5);
+
+        clawmove.setPosition(0.48);
+
+        drive(0.35, 650, -1, 1, -1, 1, 5);
+
+        drive(0.35, 1050, 1, 1, 1, 1, 5);
+        //drops last sample
         sleep(1000);
-        claw.setPosition(0);
+        claw.setPosition(0.6);        sleep(500);
+
+        //backs up after last sample
+        drive(0.5, 1050, -1, -1, -1, -1, 5);
+
+        LiftKit.setTargetPosition(0);
+        LiftKit.setPower(0.6);
+        ArmJoint.setTargetPosition(2500);
+        ArmJoint.setPower(0.3);
+
 
 
 
@@ -198,7 +239,6 @@ public class JavaTest1 extends LinearOpMode {
         drive(0.5, 425, -1, -1, -1, -1, 5);
 
          */
-
 
         sleep(2000);
     }

@@ -148,14 +148,14 @@ public class TeleOp extends OpMode {
 
         //closes or opens claw
         if (gamepad2.right_bumper || 0 < gamepad2.right_trigger) {
-            claw.setPosition(-0.3);
+            claw.setPosition(1);
             //0.45
         }
         else{
-            claw.setPosition(0.25);
+            claw.setPosition(0.8);
         }
         if (gamepad2.left_bumper) {
-            claw.setPosition(1);
+            claw.setPosition(0.1);
         }
 
 
