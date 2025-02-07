@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Paint;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Parallel Tests", group="Robot")
-public class JavaTest1 extends LinearOpMode {
+@Autonomous(name="Sample Auto", group="Robot")
+public class SamplesAuto extends LinearOpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor BackLeft;
@@ -73,7 +70,7 @@ public class JavaTest1 extends LinearOpMode {
 
         ArmJoint.setTargetPosition(2275);
 
-        double liftPos = 1300;
+        double liftPos = 1350;
         double distToPosLift = liftPos - LiftKit.getCurrentPosition();
 
         clawmove.setPosition(0.48);
@@ -85,11 +82,12 @@ public class JavaTest1 extends LinearOpMode {
         claw.setPosition(1);
 
         waitForStart();
+        //start =======================================================================================================================
         //strafes off wall
         drive(0.35, 100, 1, -1, -1, 1, 5);
 
         ArmJoint.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        /*ArmJoint.setPower(0.6);
+        ArmJoint.setPower(0.6);
 
         while (distToPosLift > 50 && opModeIsActive()){
             distToPosLift = liftPos - LiftKit.getCurrentPosition();
@@ -103,26 +101,25 @@ public class JavaTest1 extends LinearOpMode {
         }
         LiftKit.setPower(-0.2);
 
+        /*
         while (ArmJoint.isBusy() && opModeIsActive()){
             telemetry.addData("ArmPosition: ", ArmJoint.getCurrentPosition());
             telemetry.addData("Arm Power:", ArmJoint.getPower());
             telemetry.update();
-        }
+        }*/
 
-        ArmJoint.setPower(-0.09);
 
-         */
+
         //moves lift kit
-        LiftKit.setTargetPosition(1300);
-        LiftKit.setPower(-0.6);
+        //LiftKit.setTargetPosition(1300);  ============ first lift
+        //LiftKit.setPower(-0.6);
+
         sleep(200);
-        ArmJoint.setTargetPosition(2275);
-        ArmJoint.setPower(0.6);
         //
         drive(0.35, 300, 1, 1, 1, 1, 5);
 
         drive(0.35, 250, -1, 1, -1, 1, 5);
-        sleep(1000);
+        sleep(500);
         claw.setPosition(0.6);
         sleep(300);
 
@@ -141,7 +138,7 @@ public class JavaTest1 extends LinearOpMode {
 
         sleep(300);
         claw.setPosition(0.6);
-        drive(0.35, 350, -1, 1, 1, -1, 5);
+        drive(0.35, 343, -1, 1, 1, -1, 5);
 
         /*LiftKit.setTargetPosition(175);
         LiftKit.setPower(0.6);
@@ -155,18 +152,52 @@ public class JavaTest1 extends LinearOpMode {
         sleep(1000);
 
          */
-
+/*
         LiftKit.setTargetPosition(1200);
         LiftKit.setPower(0.6);
-        sleep(1500);
+
+ */
+        liftPos = 150;
+        distToPosLift = liftPos - LiftKit.getCurrentPosition();
+
+        while (distToPosLift < -50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.15);
+
+        sleep(400);
+        //closes on second sample
         claw.setPosition(1);
 
-        sleep(500);
-
+        sleep(600);
+/*
         LiftKit.setTargetPosition(1300);
         LiftKit.setPower(-0.6);
+
+ */
         ArmJoint.setTargetPosition(2330);
         ArmJoint.setPower(-0.5);
+
+        liftPos = 1350;
+        distToPosLift = liftPos - LiftKit.getCurrentPosition();
+        while (distToPosLift > 50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.15);
 
         drive(0.35, 1500, -1, 1, -1, 1, 5);
 
@@ -182,22 +213,54 @@ public class JavaTest1 extends LinearOpMode {
         ArmJoint.setTargetPosition(3650);
         sleep(200);
         //strafe right before picking up last sample
-        drive(0.3, 190, 1, -1, -1, 1, 5);
+        drive(0.3, 180, 1, -1, -1, 1, 5);
 
-        drive(0.35, 195, 1, 1, 1, 1, 5);
-
+        drive(0.35, 172, 1, 1, 1, 1, 5);
+/*
         LiftKit.setTargetPosition(0);
         LiftKit.setPower(0.6);
+ */
+        liftPos = 150;
+        distToPosLift = liftPos - LiftKit.getCurrentPosition();
+
+        while (distToPosLift < -50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.15);
+
         sleep(1500);
         claw.setPosition(1);
 
         //lifts kit after grabbing 3rd sample
-        sleep(200);
-
+        sleep(750);
+/*
         LiftKit.setTargetPosition(1300);
         LiftKit.setPower(-0.6);
+ */
         ArmJoint.setTargetPosition(2330);
         ArmJoint.setPower(-0.5);
+
+        liftPos = 1350;
+        distToPosLift = liftPos - LiftKit.getCurrentPosition();
+        while (distToPosLift > 50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.15);
+
 
         clawmove.setPosition(0.48);
 
@@ -210,9 +273,24 @@ public class JavaTest1 extends LinearOpMode {
 
         //backs up after last sample
         drive(0.5, 1050, -1, -1, -1, -1, 5);
-
+/*
         LiftKit.setTargetPosition(0);
         LiftKit.setPower(0.6);
+ */
+        liftPos = 1350;
+        distToPosLift = liftPos - LiftKit.getCurrentPosition();
+        while (distToPosLift < -50 && opModeIsActive()){
+            distToPosLift = liftPos - LiftKit.getCurrentPosition();
+            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
+
+            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
+            telemetry.addData("LiftPosition: ", liftPos);
+            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
+            telemetry.update();
+        }
+        LiftKit.setPower(-0.15);
+
         ArmJoint.setTargetPosition(2500);
         ArmJoint.setPower(0.3);
 
