@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Parallel Tests", group="Robot")
+@Autonomous(name="Sample Auto", group="Robot")
 public class JavaTest1 extends LinearOpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
