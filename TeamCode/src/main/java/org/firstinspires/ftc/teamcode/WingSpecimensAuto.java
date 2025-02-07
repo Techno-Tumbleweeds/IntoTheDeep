@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-@Autonomous(name="Specimen Auto", group="Robot")
-public class SpecimensAuto extends LinearOpMode {
+@Disabled
+@Autonomous(name="Specimen Auto old", group="Robot")
+public class WingSpecimensAuto extends LinearOpMode {
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor BackLeft;
@@ -95,7 +96,7 @@ public class SpecimensAuto extends LinearOpMode {
         drive(0.35, 1250, -1, -1, -1, -1, 5);
 
         //moves arm higher
-        ArmJoint.setTargetPosition(1050);
+        ArmJoint.setTargetPosition(1150);
         ArmJoint.setPower(0.6);
 
         sleep(1250);
@@ -106,49 +107,29 @@ public class SpecimensAuto extends LinearOpMode {
         claw.setPosition(0.6);
         sleep(150);
 
-        //drives away after clipping specimen
-        drive(0.5, 250, 1, 1, 1, 1, 5);
+        drive(0.35, 250, 1, 1, 1, 1, 5);
 
         //strafes left
-        drive(0.5, 1300, -1, 1, 1, -1, 5);
+        drive(0.35, 1300, -1, 1, 1, -1, 5);
 
-        //drives behind sample
-        drive(0.5, 1300, -1, -1, -1, -1, 5);
+        //drives toward submersible
+        drive(0.35, 1300, -1, -1, -1, -1, 5);
 
-        //strafes in front of first sample
-        drive(0.5, 370, -1, 1, 1, -1, 5);
+        drive(0.35, 300, -1, 1, 1, -1, 5);
 
-        //pushes first sample in to oz zone
-        drive(0.5, 1700, 1, 1, 1, 1, 5);
+        drive(0.35, 1700, 1, 1, 1, 1, 5);
 
-        //backs up behind second sample
-        drive(0.5, 1600, -1, -1, -1, -1, 5);
+        drive(0.35, 1600, -1, -1, -1, -1, 5);
 
-        //strafes behind second sample
-        drive(0.5, 420, -1, 1, 1, -1, 5);
+        drive(0.35, 325, -1, 1, 1, -1, 5);
 
-        //pushes second sample in to oz zone
-        drive(0.5, 1700, 1, 1, 1, 1, 5);
+        drive(0.35, 1700, 1, 1, 1, 1, 5);
 
-        ArmJoint.setTargetPosition(3650);
+        ArmJoint.setTargetPosition(3750);
         ArmJoint.setPower(0.3);
-/*
+
         LiftKit.setTargetPosition(1000);
         LiftKit.setPower(-0.6);
- */
-        liftPos = 1000;
-        distToPosLift = liftPos - LiftKit.getCurrentPosition();
-        while (distToPosLift > 50 && opModeIsActive()){
-            distToPosLift = liftPos - LiftKit.getCurrentPosition();
-            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
-
-            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
-            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
-            telemetry.addData("LiftPosition: ", liftPos);
-            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
-            telemetry.update();
-        }
-        LiftKit.setPower(-0.15);
 
         sleep(750);
 
@@ -156,79 +137,15 @@ public class SpecimensAuto extends LinearOpMode {
 
         sleep(950);
 
-        //drives towards wall
-        drive(0.2, 525, 1, 1, 1, 1, 5);
-        //drive(0.2, 250, 1, 1, 1, 1, 5);
+        drive(0.35, 450, 1, 1, 1, 1, 5);
+        drive(0.2, 250, 1, 1, 1, 1, 5);
 
         sleep(100);
 
         //LiftKit.setTargetPosition(950);
         //LiftKit.setPower(0.4);
 
-        liftPos = 860;
-        distToPosLift = liftPos - LiftKit.getCurrentPosition();
-        while (distToPosLift < -50 && opModeIsActive()){
-            distToPosLift = liftPos - LiftKit.getCurrentPosition();
-            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
-
-            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/500);
-            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
-            telemetry.addData("LiftPosition: ", liftPos);
-            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
-            telemetry.update();
-        }
-        LiftKit.setPower(-0.15);
-
-        sleep(500);
         claw.setPosition(1);
-        sleep(500);
-        //drives forward after picking up second specimen
-        drive(0.35, 150, 1, 1, 1, 1, 5);
-
-        ArmJoint.setTargetPosition(500);
-        ArmJoint.setPower(-0.6);
-
-        sleep(1000);
-
-        //backs up away from wall after picking up specimen
-        drive(0.5, 200, -1, -1, -1, -1, 5);
-
-        //strafes towards submersible
-        drive(0.5, 2500, 1, -1, -1, 1, 5);
-
-        liftPos = 450;
-        distToPosLift = liftPos - LiftKit.getCurrentPosition();
-        while (distToPosLift < -50 && opModeIsActive()){
-            distToPosLift = liftPos - LiftKit.getCurrentPosition();
-            liftPos = LiftKit.getCurrentPosition() + distToPosLift;
-
-            LiftKit.setPower(-(liftPos - LiftKit.getCurrentPosition())/200);
-            telemetry.addData("ArmPosition: ", LiftKit.getCurrentPosition());
-            telemetry.addData("LiftPosition: ", liftPos);
-            telemetry.addData("Arm Power:",(liftPos - LiftKit.getCurrentPosition())/200);
-            telemetry.update();
-        }
-        LiftKit.setPower(-0.15);
-
-        //backs up towards submersible
-        drive(0.5, 700, -1, -1, -1, -1, 5);
-
-        ArmJoint.setTargetPosition(800);
-        ArmJoint.setPower(0.6);
-
-        //clips second specimen
-        drive(0.35, 300, 1, 1, 1, 1, 5);
-
-        //releases specimen
-        claw.setPosition(0.6);
-        sleep(500);
-
-        //drives away from submersible
-        drive(0.5, 200, 1, 1, 1, 1, 5);
-
-        //strafes toward oz zone
-        drive(0.5, 1000, -1, 1, 1, -1, 5);
-
 
         sleep(3000);
     }
@@ -270,6 +187,6 @@ public class SpecimensAuto extends LinearOpMode {
         BackLeft.setPower(0);
         BackRight.setPower(0);
 
-        sleep(300); //was 800
+        sleep(200); //was 800
     }
 }

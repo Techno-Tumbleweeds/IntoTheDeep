@@ -138,7 +138,7 @@ public class SamplesAuto extends LinearOpMode {
 
         sleep(300);
         claw.setPosition(0.6);
-        drive(0.35, 343, -1, 1, 1, -1, 5);
+        drive(0.35, 330, -1, 1, 1, -1, 5);
 
         /*LiftKit.setTargetPosition(175);
         LiftKit.setPower(0.6);
@@ -210,17 +210,17 @@ public class SamplesAuto extends LinearOpMode {
         drive(0.35, 1200, -1, -1, -1, -1, 5);
         clawmove.setPosition(0.15);
         drive(0.35, 600, 1, -1, 1, -1, 5);
-        ArmJoint.setTargetPosition(3650);
+        ArmJoint.setTargetPosition(3700);
         sleep(200);
         //strafe right before picking up last sample
         drive(0.3, 180, 1, -1, -1, 1, 5);
 
-        drive(0.35, 172, 1, 1, 1, 1, 5);
-/*
+        drive(0.35, 128, 1, 1, 1, 1, 5);
+/*172
         LiftKit.setTargetPosition(0);
         LiftKit.setPower(0.6);
  */
-        liftPos = 150;
+        liftPos = 125;
         distToPosLift = liftPos - LiftKit.getCurrentPosition();
 
         while (distToPosLift < -50 && opModeIsActive()){
@@ -235,7 +235,7 @@ public class SamplesAuto extends LinearOpMode {
         }
         LiftKit.setPower(-0.15);
 
-        sleep(1500);
+        sleep(750);
         claw.setPosition(1);
 
         //lifts kit after grabbing 3rd sample
