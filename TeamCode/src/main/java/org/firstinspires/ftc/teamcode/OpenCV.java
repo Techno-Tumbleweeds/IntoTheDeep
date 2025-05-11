@@ -37,6 +37,8 @@ public class OpenCV extends OpMode {
     private enum State { IDLE, WAITING, TURNING }
     private State currentState = State.IDLE;
 
+    boolean goingLeft = true;
+
     @Override
     public void init() {
         WebcamName webcamName = hardwareMap.get(WebcamName.class, "Webcam1");
@@ -91,21 +93,17 @@ public class OpenCV extends OpMode {
                         strafeRight();
                     } else if (pos.equals("CENTER")) {
                         stopDrive();
-                        timer.reset(); // start the 1-second wait
-                        currentState = State.WAITING;
+                    } else if (pos.equals("NONE")) {
+                        if (timer.seconds() > 1.0){
+                            goingLeft = !goingLeft;
+                            timer.reset();
+                        }
+                        if (goingLeft){
+                            strafeLeft();
+                        } else {
+                            strafeRight();
+                        }
                     }
-                    break;
-
-                case WAITING:
-                    stopDrive();
-                    if (timer.seconds() > 1.0) {
-                        currentState = State.TURNING;
-                    }
-                    break;
-
-                case TURNING:
-                    sensedTurn();
-                    // optionally, add logic to stop after a certain time or condition
                     break;
             }
         } else {
@@ -118,17 +116,17 @@ public class OpenCV extends OpMode {
 
     // === MOTOR CONTROL METHODS ===
     public void strafeLeft() {
-        leftFront.setPower(-0.1);
-        leftBack.setPower(0.1);
-        rightFront.setPower(0.1);
-        rightBack.setPower(-0.1);
+        leftFront.setPower(-0.15);
+        leftBack.setPower(0.15);
+        rightFront.setPower(0.15);
+        rightBack.setPower(-0.15);
     }
 
     public void strafeRight() {
-        leftFront.setPower(0.1);
-        leftBack.setPower(-0.1);
-        rightFront.setPower(-0.1);
-        rightBack.setPower(0.1);
+        leftFront.setPower(0.15);
+        leftBack.setPower(-0.15);
+        rightFront.setPower(-0.15);
+        rightBack.setPower(0.15);
     }
 
     public void stopDrive() {
@@ -140,10 +138,10 @@ public class OpenCV extends OpMode {
 
     }
     public void sensedTurn(){
-        leftFront.setPower(0.1);
-        leftBack.setPower(0.1);
-        rightFront.setPower(-0.1);
-        rightBack.setPower(-0.1);
+        leftFront.setPower(0.3);
+        leftBack.setPower(0.3);
+        rightFront.setPower(-0.3);
+        rightBack.setPower(-0.3);
     }
     class ExamplePipeline extends OpenCvPipeline {
         public String position = "NONE";
@@ -159,7 +157,9 @@ public class OpenCV extends OpMode {
             Core.inRange(hsv, lowerYellow, upperYellow, mask);
 
             Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+            Imgproc.morphologyEx(mask, mask, Imgproc.MORPH_OPEN, kernel);
             Imgproc.morphologyEx(mask, mask, Imgproc.MORPH_CLOSE, kernel);
+
 
             List<MatOfPoint> contours = new ArrayList<>();
             Mat hierarchy = new Mat();
@@ -167,22 +167,32 @@ public class OpenCV extends OpMode {
 
             double maxArea = 0;
             Rect bestRect = null;
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            int maxX = 0;
+            int maxY = 0;
+            boolean found = false;
+
             for (MatOfPoint contour : contours) {
                 double area = Imgproc.contourArea(contour);
                 if (area > 500) {
                     Rect rect = Imgproc.boundingRect(contour);
-                    float aspectRatio = (float) rect.width / rect.height;
-
-                    if ((aspectRatio > 1.5 || aspectRatio < 0.66) && area > maxArea) {
-                        maxArea = area;
-                        bestRect = rect;
-                    }
+                    minX = Math.min(minX, rect.x);
+                    minY = Math.min(minY, rect.y);
+                    maxX = Math.max(maxX, rect.x + rect.width);
+                    maxY = Math.max(maxY, rect.y + rect.height);
+                    found = true;
                 }
             }
 
-            if (bestRect != null) {
-                Imgproc.rectangle(input, bestRect, new Scalar(0, 255, 0), 2);
-                int centerX = bestRect.x + bestRect.width / 2;
+            Rect mergedRect = null;
+            if (found) {
+                mergedRect = new Rect(minX, minY, maxX - minX, maxY - minY);
+            }
+
+            if (mergedRect != null) {
+                Imgproc.rectangle(input, mergedRect, new Scalar(0, 255, 0), 2);
+                int centerX = mergedRect.x + mergedRect.width / 2;
 
                 if (centerX < input.cols() / 3) {
                     position = "LEFT";
@@ -194,6 +204,7 @@ public class OpenCV extends OpMode {
             } else {
                 position = "NONE";
             }
+
 
             return input;
         }
